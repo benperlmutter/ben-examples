@@ -4,6 +4,8 @@ from sentence_transformers import SentenceTransformer, util
 
 
 query = "stickers, water, burrito"
+query = "ice cream, chips"
+query = "ice cream"
 # query = '{"name": "Cigarettes - Am Sq Turqse B", "quantity": "2"}'
 #query = "The pupils worked hard for their test."
 #query = "Studying hard, the students prepped for their exams."
@@ -47,7 +49,7 @@ pipeline = [
         }
     },
     {
-    	"$limit":1
+    	"$limit": 3
     },
     {
         "$project": {
