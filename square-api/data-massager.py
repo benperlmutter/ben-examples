@@ -5,7 +5,7 @@ from sentence_transformers import SentenceTransformer, util
 
 # ---------- functions start here ---------- #
 def readAndProcess(db, col):
-	cursor = col.find({}).limit(10)
+	cursor = col.find({})
 	for document in cursor:
 		new_doc = {
 		"order_id": document["order_id"],
@@ -30,8 +30,9 @@ def readAndProcessDocument(document):
 
 	new_string = ""
 	
-	for li in document["line_items"]:
-		new_string += json.dumps(li)
+	if "line_items" in document:
+		for li in document["line_items"]:
+			new_string += json.dumps(li)
 
 	new_doc["basket"] = new_string
 	return new_doc
@@ -55,7 +56,7 @@ orders_demo_col = retail_demo_db.orders
 
 model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
-for doc in orders_col.find({}).limit(10):
+for doc in orders_col.find({}):
 	# w = orders_demo_col.insert_one(readAndProcessDocument(doc))
 	# print(w.inserted_id)
 	new_doc = readAndProcessDocument(doc)
@@ -67,5 +68,5 @@ for doc in orders_col.find({}).limit(10):
 
 	w = orders_demo_col.insert_one(new_doc)
 	print(w.inserted_id)
-	print(orders_demo_col.find_one({"_id":w.inserted_id}))
+	# print(orders_demo_col.find_one({"_id":w.inserted_id}))
 
