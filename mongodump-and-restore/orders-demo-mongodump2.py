@@ -77,9 +77,9 @@ def readAndProcessDocument(document):
 
 
 # ---------- script starts here ---------- #
-dateFrom = datetime(2023, 1, 1)
+dateFrom = datetime(2024, 7, 3)
 # dateTo = datetime.today()
-dateTo = datetime(2023, 6, 15)
+dateTo = datetime(2023, 7, 15)
 
 dateFromString = dateFrom.strftime("%Y-%m-%dT%H:%M:%S")
 dateToString = dateTo.strftime("%Y-%m-%dT%H:%M:%S")
