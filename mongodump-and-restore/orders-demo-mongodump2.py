@@ -79,15 +79,15 @@ def readAndProcessDocument(document):
 # ---------- script starts here ---------- #
 dateFrom = datetime(2024, 7, 3)
 # dateTo = datetime.today()
-dateTo = datetime(2023, 7, 15)
+dateTo = datetime(2024, 7, 15)
 
 dateFromString = dateFrom.strftime("%Y-%m-%dT%H:%M:%S")
 dateToString = dateTo.strftime("%Y-%m-%dT%H:%M:%S")
 
-f = open('../../atlas_creds/atlas_creds.json')
+f = open('../../atlas-creds/atlas-creds.json')
 pData = json.load(f)
 
-myclient = pymongo.MongoClient(pData["mongorestore2-connection-string"])
+myclient = pymongo.MongoClient(pData["mongodump2-connection-string"])
 mydb = myclient["retail"]
 mycol = mydb["orders"]
 
