@@ -5,7 +5,8 @@ from sentence_transformers import SentenceTransformer, util
 
 query = "stickers, water, burrito"
 query = "B - chicken"
-# query = "ice cream, chips"
+query = "ice cream, chips, B - chicken"
+query = "chips, B - chicken"
 # query = "ice cream"
 # query = '{"name": "Cigarettes - Am Sq Turqse B", "quantity": "2"}'
 #query = "The pupils worked hard for their test."
