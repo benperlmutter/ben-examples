@@ -72,7 +72,7 @@ orders_burrito_col = retail_demo_db.orders_updated_baskets
 
 # model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
-for doc in orders_demo_col.find({}).limit():
+for doc in orders_demo_col.find({}):
 	# w = orders_demo_col.insert_one(readAndProcessDocument(doc))
 	# print(w.inserted_id)
 	new_doc = readAndProcessBasket(doc)
