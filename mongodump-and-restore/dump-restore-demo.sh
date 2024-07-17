@@ -8,7 +8,7 @@ while read -r LINE
 do
 	# printf '%s\n' "${LINE:1:28}"
 	# if [ "${LINE:1:28}" = "mongodump2-connection-string" ]; then printf '%s\n' "${LINE:32:110}"; fi
-	if [ "${LINE:1:28}" = "mongodump2-connection-string" ]; then CONN_STRING=${LINE:32:110}; fi #reduce to just needed conn string
+	if [ "${LINE:1:28}" = "mongodump2-connection-string" ]; then CONN_STRING=${LINE:32:110}; fi
 done < "$INFILE"
 
 echo $CONN_STRING
