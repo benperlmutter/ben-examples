@@ -74,6 +74,11 @@ orders_burrito_col = retail_demo_db.orders_updated_baskets
 
 doc_array = []
 counter = 0
+total_count = 0
+
+# print(orders_demo_col.find({}).explain()["executionStats"]["nReturned"])
+
+num_docs = orders_demo_col.find({}).explain()["executionStats"]["nReturned"]
 
 for doc in orders_demo_col.find({}):
 	# w = orders_demo_col.insert_one(readAndProcessDocument(doc))
@@ -81,7 +86,9 @@ for doc in orders_demo_col.find({}):
 	new_doc = readAndProcessBasket(doc)
 	doc_array.append(new_doc)
 	counter += 1
-	if counter > 999:
+	total_count += 1
+
+	if counter > 999 or total_count > (num_docs-3):
 		w = orders_burrito_col.insert_many(doc_array)
 		print(w)
 		doc_array = []
