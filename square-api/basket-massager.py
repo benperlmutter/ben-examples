@@ -68,7 +68,7 @@ mdb_client = pymongo.MongoClient(mdb_string)
 retail_demo_db = mdb_client.retail
 orders_demo_col = retail_demo_db.orders_updated_baskets
 
-other_col = retail_demo_db.other
+other_col = retail_demo_db.copy3
 
 # model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
@@ -77,30 +77,29 @@ counter = 0
 total_count = 0
 
 # print(orders_demo_col.find({}).explain()["executionStats"]["nReturned"])
-print(orders_demo_col.find({}).explain())
 
-# num_docs = orders_demo_col.find({}).explain()["executionStats"]["nReturned"]
+num_docs = orders_demo_col.find({}).explain()["executionStats"]["nReturned"]
 
-# for doc in orders_demo_col.find({}):
-# 	# w = orders_demo_col.insert_one(readAndProcessDocument(doc))
-# 	# print(w.inserted_id)
-# 	# new_doc = readAndProcessBasket(doc)
-# 	doc_array.append(doc)
-# 	counter += 1
-# 	total_count += 1
+for doc in orders_demo_col.find({}):
+	# w = orders_demo_col.insert_one(readAndProcessDocument(doc))
+	# print(w.inserted_id)
+	# new_doc = readAndProcessBasket(doc)
+	doc_array.append(doc)
+	counter += 1
+	total_count += 1
 
-# 	if counter > 999 or total_count > (num_docs-3):
-# 		w = other_col.insert_many(doc_array)
-# 		print(w)
-# 		doc_array = []
-# 		counter = 0
-# 	# print(new_doc)
-# 	# basket_vector = model.encode(new_doc["basket"]).tolist()
+	if counter > 999 or total_count > (num_docs-3):
+		w = other_col.insert_many(doc_array)
+		print(w)
+		doc_array = []
+		counter = 0
+	# print(new_doc)
+	# basket_vector = model.encode(new_doc["basket"]).tolist()
 
-# 	# result_doc['sentence'] = doc
-# 	# new_doc['vector_embedding'] = basket_vector
-# 	# print(new_doc)
-# 	# w = orders_burrito_col.insert_one(new_doc)
-# 	# print(w.inserted_id)
-# 	# print(orders_demo_col.find_one({"_id":w.inserted_id}))
+	# result_doc['sentence'] = doc
+	# new_doc['vector_embedding'] = basket_vector
+	# print(new_doc)
+	# w = orders_burrito_col.insert_one(new_doc)
+	# print(w.inserted_id)
+	# print(orders_demo_col.find_one({"_id":w.inserted_id}))
 
