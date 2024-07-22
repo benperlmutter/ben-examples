@@ -68,7 +68,7 @@ mdb_client = pymongo.MongoClient(mdb_string)
 retail_demo_db = mdb_client.retail
 orders_demo_col = retail_demo_db.orders_updated_baskets
 
-other_col = retail_demo_db.copy3
+other_col = retail_demo_db.another_copy5
 
 # model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 

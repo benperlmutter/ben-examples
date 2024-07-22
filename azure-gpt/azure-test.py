@@ -31,7 +31,9 @@ completion = deployment_client.chat.completions.create(
     messages=[
         {
             "role": "user",
-            "content": "How do I output all files in a directory using Python?",
+            # "content": "How do I output all files in a directory using Python?",
+            # "content": "What is the most likely thing I would purchase next if my current basket consists of stickers, water, and a burrito, and 3 similar baskets purchased previously have looked like basket 1 made up of Amys Black Bean & Corn Salsa with quantity of 1, Juice - Welch's Grape Juice 16oz with quantity of 1, Taco Works Tortilla Chip with quantity of 1, Stickers - Assorted with quantity of 3, and basket 2 made up of Taco Works Tortilla Chips with quantity of 1, Stickers - Assorted with quantity of 3, and basket 3 made up of Stickers - Assorted with quantity of 4, Morenita Salt And Lime Tortilla Chips with quantity of 1, Salsa Fresca 16oz with quantity of 1"
+            "content": "Given my basket of stickers, water, and a burrito, What is the most common item not found in my basket from these 3 similar baskets that look like basket 1 made up of Amys Black Bean & Corn Salsa with quantity of 1, Juice - Welch's Grape Juice 16oz with quantity of 1, Taco Works Tortilla Chip with quantity of 1, Stickers - Assorted with quantity of 3, and basket 2 made up of Taco Works Tortilla Chips with quantity of 1, Stickers - Assorted with quantity of 3, and basket 3 made up of Stickers - Assorted with quantity of 4, Morenita Salt And Lime Tortilla Chips with quantity of 1, Salsa Fresca 16oz with quantity of 1"
         },
     ],
 )
