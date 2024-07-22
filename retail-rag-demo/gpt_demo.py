@@ -6,11 +6,11 @@ import os
 from openai import AzureOpenAI
 
 
+# ---------- define the query here ---------- #
+
 query = "stickers, water, burrito"
-# query = "B - chicken"
-# query = "ice cream, chips, B - chicken"
 # query = "chips, Chicken Burrito"
-# query = "ice cream"
+query = "ice cream, red wine, and popcorn"
 # query = '{"name": "Cigarettes - Am Sq Turqse B", "quantity": "2"}'
 # query = "salad, sandwich, coca cola"
 # query = "W-"
@@ -19,10 +19,8 @@ query = "stickers, water, burrito"
 #query = "Tyson's boxing style was feared for its power and aggression."
 
 
-# ---------- functions start here ---------- #
+# ---------- gather credentials here ---------- #
 
-
-# ---------- script starts here ---------- #
 f = open('../../atlas-creds/atlas-creds.json')
 pData = json.load(f)
 
@@ -56,6 +54,11 @@ deployment_client = AzureOpenAI(
     api_key=azure_api_key
 )
 
+
+# ---------- establish parameters here ---------- #
+
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
 vector_query = model.encode(query).tolist()
@@ -73,7 +76,7 @@ pipeline = [
         }
     },
     {
-    	"$limit": 3
+        "$limit": 10
     },
     {
         "$project": {
@@ -86,14 +89,51 @@ pipeline = [
     }
 ]
 
-# print('hello world')
+basket_counter = 0
 
+
+# ---------- functions start here ---------- #
+
+def process_query_result(basket):
+    basket_string = ""
+    for item in json.loads("["+basket.replace("}{","},{")+"]"):
+        basket_string += " "
+        basket_string += item["name"]+" with quantity of "+str(item["quantity"])+","
+
+    return basket_string
+
+def query_gpt(message_content, client):
+    completion = client.chat.completions.create(
+        model="gpt-35-turbo",
+        messages=[
+        {
+        "role": "user",
+        "content": message_content
+        }])
+    return completion.to_json()
+
+
+# ---------- script starts here ---------- #
+
+message_content = "Given my basket of "+query+", what is the most common item these similar baskets have that is not currently in my basket, with these other baskets looking like "
 results = orders_demo_col.aggregate(pipeline)
-# results = orders_demo_col.find({})
-# print(results)
 for result in results:
-	# print(result)
-	print("\n")
-	print("*************Vector Search Result*****************")
-	print(result['basket'])
-	print("**************************************************")
+    basket_counter += 1
+    basket_string = ""
+    if basket_counter > 1:
+        basket_string += " and "
+    basket_string += "basket "+str(basket_counter)+" made up of"+process_query_result(result["basket"])
+    message_content += basket_string
+    # # print(result)
+	# print("\n")
+	# print("*************Vector Search Result*****************")
+	# print(result['basket'])
+	# print("**************************************************")
+
+response = query_gpt(message_content[:-1], deployment_client)
+print(json.loads(response)["choices"][0]["message"]["content"])
+
+
+
+
+
