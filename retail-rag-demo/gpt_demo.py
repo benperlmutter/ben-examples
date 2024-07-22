@@ -133,7 +133,3 @@ for result in results:
 response = query_gpt(message_content[:-1], deployment_client)
 print(json.loads(response)["choices"][0]["message"]["content"])
 
-
-
-
-
