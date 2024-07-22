@@ -124,11 +124,6 @@ for result in results:
         basket_string += " and "
     basket_string += "basket "+str(basket_counter)+" made up of"+process_query_result(result["basket"])
     message_content += basket_string
-    # # print(result)
-	# print("\n")
-	# print("*************Vector Search Result*****************")
-	# print(result['basket'])
-	# print("**************************************************")
 
 response = query_gpt(message_content[:-1], deployment_client)
 print(json.loads(response)["choices"][0]["message"]["content"])
