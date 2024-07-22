@@ -1,3 +1,4 @@
+import json
 import os
 from openai import AzureOpenAI
     
@@ -7,23 +8,21 @@ from openai import AzureOpenAI
 #     azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
 #     )
 
-client = AzureOpenAI(
-    api_key="36d786792d78459d88dc4782e716f618",  
-    api_version="2024-02-01",
-    azure_endpoint = "https://ben-demo.openai.azure.com/"
-    )
+f = open('../../azure-gpt-creds/azure-gpt-creds.json')
+pData = json.load(f)
 
-api_version = "2024-02-01"
-    
-deployment_name='retail-demo' #This will correspond to the custom name you chose for your deployment when you deployed a model. Use a gpt-35-turbo-instruct deployment. 
+azure_api_key = pData["azure-api-key"]
+azure_api_version = pData["azure-api-version"]
+azure_endpoint = pData["azure-endpoint"]
+azure_deployment_name = pData["azure-deployment-name"] 
     
 deployment_client = AzureOpenAI(
-    api_version=api_version,
+    api_version=azure_api_version,
     # https://learn.microsoft.com/en-us/azure/cognitive-services/openai/how-to/create-resource?pivots=web-portal#create-a-resource
-    azure_endpoint="https://ben-demo.openai.azure.com/",
+    azure_endpoint=azure_endpoint,
     # Navigate to the Azure OpenAI Studio to deploy a model.
-    azure_deployment=deployment_name,  # e.g. gpt-35-instant
-    api_key="36d786792d78459d88dc4782e716f618"
+    azure_deployment=azure_deployment_name,  # e.g. gpt-35-instant
+    api_key=azure_api_key
 )
 
 completion = deployment_client.chat.completions.create(
