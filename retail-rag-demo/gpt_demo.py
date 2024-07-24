@@ -24,13 +24,7 @@ query = "ice cream, red wine, and popcorn"
 f = open('../../atlas-creds/atlas-creds.json')
 pData = json.load(f)
 
-bsri_string = pData["bsri-connection-string"]
 mdb_string = pData["mdb-connection-string"]
-
-
-bsri_client = pymongo.MongoClient(bsri_string)
-square_db = bsri_client.square
-orders_col = square_db.orders
 
 mdb_client = pymongo.MongoClient(mdb_string)
 retail_demo_db = mdb_client.retail

@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "mongodb-jdbc-2.1.4.jar"
+    ]
+}
