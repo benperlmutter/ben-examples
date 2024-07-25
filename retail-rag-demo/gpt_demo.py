@@ -10,7 +10,7 @@ from openai import AzureOpenAI
 
 query = "stickers, water, burrito"
 # query = "chips, Chicken Burrito"
-query = "ice cream, red wine, and popcorn"
+# query = "ice cream, red wine, and popcorn"
 # query = '{"name": "Cigarettes - Am Sq Turqse B", "quantity": "2"}'
 # query = "salad, sandwich, coca cola"
 # query = "W-"
@@ -65,12 +65,12 @@ pipeline = [
             "knnBeta": {
                 "vector": vector_query,
                 "path": "vector_embedding",
-                "k": 3
+                "k": 100
             }
         }
     },
     {
-        "$limit": 10
+        "$limit": 3
     },
     {
         "$project": {
