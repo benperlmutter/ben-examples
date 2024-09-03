@@ -5,14 +5,16 @@ import random
 
 # ---------- functions start here ---------- #
 def createPart_EnginePistons(num):
+	datePulled = datetime(random.randint(2022, 2023), random.randint(1, 12), random.randint(1, 28))
+	datePulledArray = [datePulled, None]
 	doc = {
 	"partNumber": "ENGINE_PISTON_100"+str(num),
 	"description": "Engine piston",
 	"weight_kg":random.randint(3, 9),
 	"category": "Mechanical",
-	"datePutIntoService": datetime(random.randint(2010, 2023), random.randint(1, 12), random.randint(1, 30)),
-	"datePulledFromService": None,
-	"updatedAt": datetime(2024, random.randint(1, 8), random.randint(1, 30)),
+	"datePutIntoService": datetime(random.randint(2010, 2021), random.randint(1, 12), random.randint(1, 28)),
+	"datePulledFromService": datePulledArray[random.randint(0, 1)],
+	"updatedAt": datetime(2024, random.randint(1, 8), random.randint(1, 28)),
 	}
 	return doc
 
