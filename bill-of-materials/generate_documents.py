@@ -1,42 +1,32 @@
 import pymongo
 import json
 from datetime import datetime
+import random
 
 # ---------- functions start here ---------- #
-def createPartsDocs(num):
-	i = 0
-	while i < num:
-		i += 1
-		doc = {
-		"partNumber": "P1234",
-		"description": "Engine piston",
-		"category": "Mechanical",
-		"datePutIntoService": datetime(2023, 1, 1),
-		"datePulledFromService": None,
-		"productsUsedIn": [
-		{
-		"productId": "PROD123",
-		"quantity": 2
-		},{
-		"productId": "PROD456",
-		"quantity": 1
-		}
-		],
-		"updatedAt": datetime(2024, 8, 28),
-		}
-		return doc
+def createPart_EnginePistons(num):
+	doc = {
+	"partNumber": "ENGINE_PISTON_100"+str(num),
+	"description": "Engine piston",
+	"weight_kg":random.randint(3, 9),
+	"category": "Mechanical",
+	"datePutIntoService": datetime(random.randint(2010, 2023), random.randint(1, 12), random.randint(1, 30)),
+	"datePulledFromService": None,
+	"updatedAt": datetime(2024, random.randint(1, 8), random.randint(1, 30)),
+	}
+	return doc
 
 def createBOMDocs(num):
-	i = 0
-	while i < num:
+	i = 1
+	while i < num+1:
 		i += 1
 		doc = {
 		"bomName": "Product A BOM",
 		"productReleaseDate": datetime(2023, 12, 15),
 		"parts": [
 		{
-		"partId": "P1234", # Reference to the part from the parts master
-		"quantity": 2,
+		"partId": "ENGINE_PISTON_100" + str(i), # Reference to the part from the parts master
+		"quantity": 4,
 		"dateUsed": datetime(2023, 11, 1),
 		"dateReleased": datetime(2023, 11, 15),
 		},{
@@ -69,7 +59,11 @@ current_version_boms_col = bom_demo_db.current_version_boms
 persona_boms_col = bom_demo_db.persona_boms
 
 # generate documents
-w = parts_col.insert_one(createPartsDocs(1))
+part_docs = 100
+i = 1
+while i < part_docs+1:
+	i+=1
+	w = parts_col.insert_one(createPart_EnginePistons(i))
 y = current_version_boms_col.insert_one(createBOMDocs(1))
 
 # for doc in orders_col.with_options(read_preference=pymongo.ReadPreference.SECONDARY_PREFERRED).find({}):
