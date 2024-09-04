@@ -4,14 +4,14 @@ from datetime import datetime
 import random
 
 # ---------- functions start here ---------- #
-def createPart_EnginePistons(num):
+def createPart(category, parent_part, part, lower_weight, higher_weight, num):
 	datePulled = datetime(random.randint(2022, 2023), random.randint(1, 12), random.randint(1, 28))
 	datePulledArray = [datePulled, None]
 	doc = {
-	"partNumber": "ENGINE_PISTON_100"+str(num),
-	"description": "Engine piston",
-	"weight_kg":random.randint(3, 9),
-	"category": "Mechanical",
+	"partNumber": parent_part.upper()+"_"+part.upper()+"_"+"100"+str(num),
+	"description": parent_part+" "+part,
+	"weight_kg":random.randint(lower_weight, higher_weight),
+	"category": category,
 	"datePutIntoService": datetime(random.randint(2010, 2021), random.randint(1, 12), random.randint(1, 28)),
 	"datePulledFromService": datePulledArray[random.randint(0, 1)],
 	"updatedAt": datetime(2024, random.randint(1, 8), random.randint(1, 28)),
@@ -46,7 +46,6 @@ def createBOMDocs(num):
 		}
 		return doc
 
-
 # ---------- script starts here ---------- #
 f = open('../../atlas-creds/atlas-creds.json')
 pData = json.load(f)
@@ -61,12 +60,26 @@ current_version_boms_col = bom_demo_db.current_version_boms
 persona_boms_col = bom_demo_db.persona_boms
 
 # generate documents
-part_docs = 100
+part_docs = 10
 i = 1
 while i < part_docs+1:
 	i+=1
-	w = parts_col.insert_one(createPart_EnginePistons(i))
-y = current_version_boms_col.insert_one(createBOMDocs(1))
+	doc_array = []
+	doc_array.append(createPart("Mechanical", "Engine", "Piston", 3, 9, i))
+	doc_array.append(createPart("Mechanical", "Engine", "Crankshaft", 6, 20, i))
+	doc_array.append(createPart("Mechanical", "Engine", "Cylinderhead", 1, 5, i))
+	doc_array.append(createPart("Mechanical", "Chassis", "Suspension", 20, 30, i))
+	doc_array.append(createPart("Mechanical", "Chassis", "Rear_Axle", 20, 30, i))
+	doc_array.append(createPart("Mechanical", "Chassis", "Front_Axle", 20, 30, i))
+	doc_array.append(createPart("Mechanical", "Transmission", "Clutch", 15, 25, i))
+	doc_array.append(createPart("Mechanical", "Transmission", "Gearbox", 25, 45, i))
+	doc_array.append(createPart("Exterior", "Body", "Doors", 20, 25, i))
+	doc_array.append(createPart("Exterior", "Body", "Windows", 3, 9, i))
+	doc_array.append(createPart("Exterior", "Body", "Roof", 40, 50, i))
+	w = parts_col.insert_many(doc_array)
+
+
+# y = current_version_boms_col.insert_one(createBOMDocs(1))
 
 # for doc in orders_col.with_options(read_preference=pymongo.ReadPreference.SECONDARY_PREFERRED).find({}):
 # 	# w = orders_demo_col.insert_one(readAndProcessDocument(doc))
