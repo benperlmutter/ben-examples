@@ -18,7 +18,7 @@ def createPart(category, parent_part, part, lower_weight, higher_weight, num):
 	}
 	return doc
 
-def createBOMDoc(part_matrix):
+def createBOMDoc(part_dict):
 	bom_parts_matrix = []
 	bom_array = []
 	i = 0
@@ -61,24 +61,45 @@ persona_boms_col = bom_demo_db.persona_boms
 # generate documents
 part_docs = 2
 i = 1
-part_matrix = []
+part_dict = {"piston":[],"crankshaft":[],"cylinderhead":[],"suspension":[],"rear_axle":[],"front_axle":[],"clutch":[],"gearbox":[],"doors":[],"windows":[],"roof":[]}
 while i < part_docs+1:
 	i+=1
 	doc_array = []
-	doc_array.append(createPart("Mechanical", "Engine", "Piston", 3, 9, i))
-	doc_array.append(createPart("Mechanical", "Engine", "Crankshaft", 6, 20, i))
-	doc_array.append(createPart("Mechanical", "Engine", "Cylinderhead", 1, 5, i))
-	doc_array.append(createPart("Mechanical", "Chassis", "Suspension", 20, 30, i))
-	doc_array.append(createPart("Mechanical", "Chassis", "Rear_Axle", 20, 30, i))
-	doc_array.append(createPart("Mechanical", "Chassis", "Front_Axle", 20, 30, i))
-	doc_array.append(createPart("Mechanical", "Transmission", "Clutch", 15, 25, i))
-	doc_array.append(createPart("Mechanical", "Transmission", "Gearbox", 25, 45, i))
-	doc_array.append(createPart("Exterior", "Body", "Doors", 20, 25, i))
-	doc_array.append(createPart("Exterior", "Body", "Windows", 3, 9, i))
-	doc_array.append(createPart("Exterior", "Body", "Roof", 40, 50, i))
-	part_matrix.append(doc_array)
-	w = parts_col.insert_many(doc_array)
-y = current_version_boms_col.insert_many(createBOMDoc(part_matrix))
+	piston = createPart("Mechanical", "Engine", "Piston", 3, 9, i)
+	part_dict["piston"].append(piston)
+
+	crankshaft = createPart("Mechanical", "Engine", "Crankshaft", 6, 20, i)
+	part_dict["crankshaft"].append(crankshaft)
+
+	cylinderhead = createPart("Mechanical", "Engine", "Cylinderhead", 1, 5, i)
+	part_dict["cylinderhead"].append(cylinderhead)
+
+	suspension = createPart("Mechanical", "Chassis", "Suspension", 20, 30, i)
+	part_dict["suspension"].append(suspension)
+
+	rear_axle = createPart("Mechanical", "Chassis", "Rear_Axle", 20, 30, i)
+	part_dict["rear_axle"].append(rear_axle)
+
+	front_axle = createPart("Mechanical", "Chassis", "Front_Axle", 20, 30, i)
+	part_dict["front_axle"].append(front_axle)
+
+	clutch = createPart("Mechanical", "Transmission", "Clutch", 15, 25, i)
+	part_dict["clutch"].append(clutch)
+
+	gearbox = createPart("Mechanical", "Transmission", "Gearbox", 25, 45, i)
+	part_dict["gearbox"].append(gearbox)
+
+	doors = createPart("Exterior", "Body", "Doors", 20, 25, i)
+	part_dict["doors"].append(doors)
+
+	windows = createPart("Exterior", "Body", "Windows", 3, 9, i)
+	part_dict["windows"].append(windows)
+
+	roof = createPart("Exterior", "Body", "Roof", 40, 50, i)
+	part_dict["roof"].append(roof)
+
+	# w = parts_col.insert_many([piston, crankshaft, cylinderhead, suspension, rear_axle, front_axle, clutch, gearbox, doors, windows, roof])
+# y = current_version_boms_col.insert_many(createBOMDoc(part_matrix))
 
 
 # y = current_version_boms_col.insert_one(createBOMDocs(1))
