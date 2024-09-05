@@ -18,33 +18,32 @@ def createPart(category, parent_part, part, lower_weight, higher_weight, num):
 	}
 	return doc
 
-def createBOMDocs(num):
-	i = 1
-	while i < num+1:
+def createBOMDoc(part_matrix):
+	bom_parts_matrix = []
+	bom_array = []
+	i = 0
+	for array in part_matrix: #create array of just parts info for BOMs
+		parts_array = []
+		for part in array:
+			bom_part = {
+			"partNumber": part["partNumber"],
+			"quantity": random.randint(1, 4),
+			"datePutIntoService": part["datePutIntoService"],
+			"datePulledFromService": part["datePulledFromService"]
+			}
+			parts_array.append(bom_part)
+		bom_parts_matrix.append(parts_array)
+	for bom_part_array in bom_parts_matrix:
 		i += 1
 		doc = {
-		"bomName": "Product A BOM",
-		"productReleaseDate": datetime(2023, 12, 15),
-		"parts": [
-		{
-		"partId": "ENGINE_PISTON_100" + str(i), # Reference to the part from the parts master
-		"quantity": 4,
-		"dateUsed": datetime(2023, 11, 1),
-		"dateReleased": datetime(2023, 11, 15),
-		},{
-		"partId": "P5678",
-		"quantity": 1,
-		"dateUsed": datetime(2023, 12, 1),
-		"dateReleased": datetime(2023, 12, 15)
-		}],
-		"personas": [
-		"Manufacturing Engineer",
-		"Procurement Specialist",
-		"Quality Assurance"
-		],
-		"updatedAt": datetime(2024, 8, 28)
+		"bomName": "BOM"+"_"+str(i),
+		"productReleaseDate": datetime(random.randint(2022, 2023), random.randint(1, 12), random.randint(1, 28)),
+		"parts": bom_part_array,
+		"personas":[],
+		"updatedAt": datetime(2024, random.randint(1, 8), random.randint(1, 28))
 		}
-		return doc
+		bom_array.append(doc)
+	return bom_array
 
 # ---------- script starts here ---------- #
 f = open('../../atlas-creds/atlas-creds.json')
@@ -60,8 +59,9 @@ current_version_boms_col = bom_demo_db.current_version_boms
 persona_boms_col = bom_demo_db.persona_boms
 
 # generate documents
-part_docs = 10
+part_docs = 2
 i = 1
+part_matrix = []
 while i < part_docs+1:
 	i+=1
 	doc_array = []
@@ -76,7 +76,9 @@ while i < part_docs+1:
 	doc_array.append(createPart("Exterior", "Body", "Doors", 20, 25, i))
 	doc_array.append(createPart("Exterior", "Body", "Windows", 3, 9, i))
 	doc_array.append(createPart("Exterior", "Body", "Roof", 40, 50, i))
+	part_matrix.append(doc_array)
 	w = parts_col.insert_many(doc_array)
+y = current_version_boms_col.insert_many(createBOMDoc(part_matrix))
 
 
 # y = current_version_boms_col.insert_one(createBOMDocs(1))
