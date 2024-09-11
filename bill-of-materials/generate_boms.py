@@ -75,12 +75,71 @@ roofs = parts_col.find({"description":"Body Roof"})
 
 num = 0
 
-parts_matrix = itertools.product(pistons, crankshafts, cylinderheads)
+pistons_parts = []
+for piston in pistons:
+	pistons_parts.append(createPartsDoc(piston))
+
+crankshafts_parts = []
+for crankshaft in crankshafts:
+	crankshafts_parts.append(createPartsDoc(crankshaft))
+
+cylinderheads_parts = []
+for cylinderhead in cylinderheads:
+	cylinderheads_parts.append(createPartsDoc(cylinderhead))
+
+suspensions_parts = []
+for suspension in suspensions:
+	suspensions_parts.append(createPartsDoc(suspension))
+
+rear_axles_parts = []
+for rear_axle in rear_axles:
+	rear_axles_parts.append(createPartsDoc(rear_axle))
+
+front_axles_parts = []
+for front_axle in front_axles:
+	front_axles_parts.append(createPartsDoc(front_axle))
+
+clutchs_parts = []
+for clutch in clutchs:
+	clutchs_parts.append(createPartsDoc(clutch))
+
+transmissions_parts = []
+for transmission in transmissions:
+	transmissions_parts.append(createPartsDoc(transmission))
+
+doors_parts = []
+for door in doors:
+	doors_parts.append(createPartsDoc(door))
+
+windows_parts = []
+for window in windows:
+	windows_parts.append(createPartsDoc(window))
+
+roofs_parts = []
+for roof in roofs:
+	roofs_parts.append(createPartsDoc(roof))
+
+
+parts_matrix = itertools.product(pistons_parts, crankshafts_parts, cylinderheads_parts, suspensions_parts, rear_axles_parts, front_axles_parts, clutchs_parts, transmissions_parts, doors_parts, windows_parts, roofs_parts)
 # print(len(list(x)))
+bulk_array = []
+bulk_counter = 0
+total_counter = 0
 for parts_array in parts_matrix:
+	num += 1
 	# print(list(parts_array))
 	bom = createBOMDoc(num, list(parts_array))
-	print(bom)
+	if bulk_counter < 1000:
+		bulk_array.append(bom)
+		bulk_counter += 1
+		total_counter += 1
+	else:
+		y = current_version_boms_col.insert_many(bulk_array)
+		bulk_array = []
+		bulk_counter = 0
+		total_counter += 1
+	if total_counter == len(parts_matrix)-1:
+		y = current_version_boms_col.insert_many(bulk_array)
 
 # for a, b, c, d, e, f, g, h, i, j, k in zip(pistons, crankshafts, cylinderheads, suspensions, rear_axles, front_axles, clutchs, transmissions, doors, windows, roofs):
 # 	num += 1
