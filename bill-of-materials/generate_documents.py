@@ -59,7 +59,7 @@ current_version_boms_col = bom_demo_db.current_version_boms
 persona_boms_col = bom_demo_db.persona_boms
 
 # generate documents
-part_docs = 2
+part_docs = 3
 i = 1
 part_dict = {"piston":[],"crankshaft":[],"cylinderhead":[],"suspension":[],"rear_axle":[],"front_axle":[],"clutch":[],"gearbox":[],"doors":[],"windows":[],"roof":[]}
 while i < part_docs+1:
@@ -98,7 +98,7 @@ while i < part_docs+1:
 	roof = createPart("Exterior", "Body", "Roof", 40, 50, i)
 	part_dict["roof"].append(roof)
 
-	# w = parts_col.insert_many([piston, crankshaft, cylinderhead, suspension, rear_axle, front_axle, clutch, gearbox, doors, windows, roof])
+	w = parts_col.insert_many([piston, crankshaft, cylinderhead, suspension, rear_axle, front_axle, clutch, gearbox, doors, windows, roof])
 # y = current_version_boms_col.insert_many(createBOMDoc(part_matrix))
 
 
