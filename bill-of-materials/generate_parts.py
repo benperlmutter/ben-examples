@@ -18,33 +18,6 @@ def createPart(category, parent_part, part, lower_weight, higher_weight, num):
 	}
 	return doc
 
-def createBOMDoc(part_dict):
-	bom_parts_matrix = []
-	bom_array = []
-	i = 0
-	for array in part_matrix: #create array of just parts info for BOMs
-		parts_array = []
-		for part in array:
-			bom_part = {
-			"partNumber": part["partNumber"],
-			"quantity": random.randint(1, 4),
-			"datePutIntoService": part["datePutIntoService"],
-			"datePulledFromService": part["datePulledFromService"]
-			}
-			parts_array.append(bom_part)
-		bom_parts_matrix.append(parts_array)
-	for bom_part_array in bom_parts_matrix:
-		i += 1
-		doc = {
-		"bomName": "BOM"+"_"+str(i),
-		"productReleaseDate": datetime(random.randint(2022, 2023), random.randint(1, 12), random.randint(1, 28)),
-		"parts": bom_part_array,
-		"personas":[],
-		"updatedAt": datetime(2024, random.randint(1, 8), random.randint(1, 28))
-		}
-		bom_array.append(doc)
-	return bom_array
-
 # ---------- script starts here ---------- #
 f = open('../../atlas-creds/atlas-creds.json')
 pData = json.load(f)
@@ -99,22 +72,3 @@ while i < part_docs+1:
 	part_dict["roof"].append(roof)
 
 	w = parts_col.insert_many([piston, crankshaft, cylinderhead, suspension, rear_axle, front_axle, clutch, gearbox, doors, windows, roof])
-# y = current_version_boms_col.insert_many(createBOMDoc(part_matrix))
-
-
-# y = current_version_boms_col.insert_one(createBOMDocs(1))
-
-# for doc in orders_col.with_options(read_preference=pymongo.ReadPreference.SECONDARY_PREFERRED).find({}):
-# 	# w = orders_demo_col.insert_one(readAndProcessDocument(doc))
-# 	# print(w.inserted_id)
-# 	# new_doc = readAndProcessDocument(doc)
-# 	# print(new_doc)
-# 	# basket_vector = model.encode(new_doc["basket"]).tolist()
-
-# 	# result_doc['sentence'] = doc
-# 	# new_doc['vector_embedding'] = basket_vector
-# 	print(doc["created_at"])
-# 	# w = orders_original_col.insert_one(doc)
-# 	# print(w.inserted_id)
-# 	# print(orders_demo_col.find_one({"_id":w.inserted_id}))
-
