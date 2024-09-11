@@ -28,6 +28,7 @@ def createPartsDoc(part):
 	doc = {
 	"partNumber":part["partNumber"],
 	"quanity": quantity,
+	"weight_kg": part["weight_kg"],
 	"datePutIntoService": part["datePutIntoService"],
 	"datePulledFromService": part["datePulledFromService"]
 	}
@@ -72,8 +73,6 @@ transmissions = parts_col.find({"description":"Transmission Gearbox"})
 doors = parts_col.find({"description":"Body Doors"})
 windows = parts_col.find({"description":"Body Windows"})
 roofs = parts_col.find({"description":"Body Roof"})
-
-num = 0
 
 pistons_parts = []
 for piston in pistons:
@@ -121,10 +120,16 @@ for roof in roofs:
 
 
 parts_matrix = itertools.product(pistons_parts, crankshafts_parts, cylinderheads_parts, suspensions_parts, rear_axles_parts, front_axles_parts, clutchs_parts, transmissions_parts, doors_parts, windows_parts, roofs_parts)
-# print(len(list(x)))
+
+size = itertools.product(pistons_parts, crankshafts_parts, cylinderheads_parts, suspensions_parts, rear_axles_parts, front_axles_parts, clutchs_parts, transmissions_parts, doors_parts, windows_parts, roofs_parts)
+
+mat_size = len(list(size))
+
 bulk_array = []
+num = 0
 bulk_counter = 0
 total_counter = 0
+
 for parts_array in parts_matrix:
 	num += 1
 	# print(list(parts_array))
@@ -134,11 +139,12 @@ for parts_array in parts_matrix:
 		bulk_counter += 1
 		total_counter += 1
 	else:
+		bulk_array.append(bom)
 		y = current_version_boms_col.insert_many(bulk_array)
 		bulk_array = []
 		bulk_counter = 0
 		total_counter += 1
-	if total_counter == len(parts_matrix)-1:
+	if total_counter == mat_size:
 		y = current_version_boms_col.insert_many(bulk_array)
 
 # for a, b, c, d, e, f, g, h, i, j, k in zip(pistons, crankshafts, cylinderheads, suspensions, rear_axles, front_axles, clutchs, transmissions, doors, windows, roofs):
