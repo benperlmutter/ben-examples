@@ -32,7 +32,7 @@ current_version_boms_col = bom_demo_db.current_version_boms
 persona_boms_col = bom_demo_db.persona_boms
 
 # generate documents
-part_docs = 2
+part_docs = 4
 i = 1
 part_dict = {"piston":[],"crankshaft":[],"cylinderhead":[],"suspension":[],"rear_axle":[],"front_axle":[],"clutch":[],"gearbox":[],"doors":[],"windows":[],"roof":[]}
 while i < part_docs+1:
