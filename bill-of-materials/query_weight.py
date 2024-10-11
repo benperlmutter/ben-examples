@@ -79,11 +79,11 @@ pipeline = [
 ]
 
 # run query
-start_time = time.time()
+start_time = time.perf_counter()
 
 if len(sys.argv) > 1:
 	print(list(current_version_boms_col.aggregate(pipeline_with_match)))
 else:
 	print(list(current_version_boms_col.aggregate(pipeline)))
 
-print("--- %s seconds ---" % (time.time() - start_time))
+print("--- %s seconds ---" % (time.perf_counter() - start_time))
