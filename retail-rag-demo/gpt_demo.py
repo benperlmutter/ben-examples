@@ -11,6 +11,7 @@ from openai import AzureOpenAI
 query = "stickers, water, burrito"
 # query = "chips, Chicken Burrito"
 # query = "ice cream, red wine, and popcorn"
+# query = "postcard, trucker cap, water shoes"
 # query = '{"name": "Cigarettes - Am Sq Turqse B", "quantity": "2"}'
 # query = "salad, sandwich, coca cola"
 # query = "W-"
@@ -109,7 +110,10 @@ def query_gpt(message_content, client):
 
 # ---------- script starts here ---------- #
 
-message_content = "Given my basket of "+query+", what is the most common item these similar baskets have that is not currently in my basket, with these other baskets looking like "
+print()
+print("my basket currently has "+query)
+print()
+message_content = "Given my basket of "+query+", what is the most common item not currently in my basket that is found in these baskets: "
 results = orders_demo_col.aggregate(pipeline)
 for result in results:
     basket_counter += 1
@@ -118,7 +122,11 @@ for result in results:
         basket_string += " and "
     basket_string += "basket "+str(basket_counter)+" made up of"+process_query_result(result["basket"])
     message_content += basket_string
+    print("basket "+str(basket_counter)+" made up of"+process_query_result(result["basket"]))
+    print()
 
+print(message_content)
+print()
 response = query_gpt(message_content[:-1], deployment_client)
 print(json.loads(response)["choices"][0]["message"]["content"])
 
