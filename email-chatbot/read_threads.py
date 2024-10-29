@@ -1,5 +1,7 @@
 import os.path
 import base64
+import datetime
+import dateutil
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -59,8 +61,11 @@ def main():
             snippet = m["snippet"]
             # print("snippet is "+snippet)
             sender = "Guest"
+            date = datetime.date.today()
             if "headers" in m["payload"]:
               for h in m["payload"]["headers"]:
+                if h["name"] == "Date":
+                  print(dateutil.parser.parse(h["value"]))
                 if h["name"] == "From":
                   if h["value"].split(" ")[0] == "Events":
                     sender = "Events Team"
