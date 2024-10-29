@@ -38,7 +38,6 @@ def main():
     # Call the Gmail API
     service = build("gmail", "v1", credentials=creds)
     results = service.users().threads().list(userId="me").execute()
-    print(results)
     threads = results.get("threads", [])
 
     i = 0
@@ -47,16 +46,70 @@ def main():
     if not threads:
       print("No labels found.")
       return
-    print("Threads:")
+    # print("Threads:")
     for thread in threads:
-      print(thread["id"])
+      print("")
+      print("new thread with id: "+thread["id"])
       if i < 20:
         i += 1
-        email = service.users().messages().get(userId="me", id=thread["id"]).execute()
-        print(email)
-        # for p in email["payload"]["parts"]:
-        #   if "data" in p["body"]:
-        #     print(base64.urlsafe_b64decode(p["body"]["data"]))
+        email = service.users().threads().get(userId="me", id=thread["id"], format="full").execute()
+        # print(email)
+        if "messages" in email:
+          for m in email["messages"]: #high level messages array
+            snippet = m["snippet"]
+            # print("snippet is "+snippet)
+            sender = "Guest"
+            if "headers" in m["payload"]:
+              for h in m["payload"]["headers"]:
+                if h["name"] == "From":
+                  if h["value"].split(" ")[0] == "Events":
+                    sender = "Events Team"
+            if "data" in m["payload"]["body"]:
+              thread_message = base64.urlsafe_b64decode(m["payload"]["body"]["data"]).decode("utf-8")
+              print(sender+" said..............................NEW PART..............................")
+              print(thread_message)
+            if "parts" in m["payload"]: #first level payload w/ parts
+              for p in m["payload"]["parts"]:
+                if "body" in p and "data" in p["body"]:
+                  thread_message = base64.urlsafe_b64decode(p["body"]["data"]).decode("utf-8")
+                  if thread_message[0] != "<":
+                    print(sender+" said..............................NEW PART..............................")
+                    thread_message = thread_message.split("On Sun,")[0]
+                    thread_message = thread_message.split("On Mon,")[0]
+                    thread_message = thread_message.split("On Tue,")[0]
+                    thread_message = thread_message.split("On Wed,")[0]
+                    thread_message = thread_message.split("On Thu,")[0]
+                    thread_message = thread_message.split("On Fri,")[0]
+                    thread_message = thread_message.split("On Sat,")[0]
+                    print(thread_message)
+                if "parts" in p: #second level parts in parts array
+                  # print("parts in p")
+                  for sub_part in p["parts"]:
+                    if "body" in sub_part and "data" in sub_part["body"]:
+                      # print("body and data in sub_part")
+                      thread_message = base64.urlsafe_b64decode(sub_part["body"]["data"]).decode("utf-8")
+                      if thread_message[0] != "<":
+                        print(sender+" said..............................NEW PART..............................")
+                        thread_message = thread_message.split("On Sun,")[0]
+                        thread_message = thread_message.split("On Mon,")[0]
+                        thread_message = thread_message.split("On Tue,")[0]
+                        thread_message = thread_message.split("On Wed,")[0]
+                        thread_message = thread_message.split("On Thu,")[0]
+                        thread_message = thread_message.split("On Fri,")[0]
+                        thread_message = thread_message.split("On Sat,")[0]
+                        print(thread_message)
+
+        # for m in email["messages"]:
+        #   if "parts" in m["payload"]:
+        #     for p in m["payload"]["parts"]:
+        #       if "data" in p["body"]:
+        #         thread_message = base64.urlsafe_b64decode(p["body"]["data"]).decode("utf-8")
+        #         if thread_message[0] != "<":
+        #           print("..............................NEW PART..............................")
+        #           print(thread_message)
+        #         # thread_message = thread_message.replace("b", "")
+        #         # thread_message = thread_message.replace("n", "")
+        #         # thread_message = thread_message.replace("\\r\n", "")
 
   except HttpError as error:
     # TODO(developer) - Handle errors from gmail API.
