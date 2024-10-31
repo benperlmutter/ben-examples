@@ -65,6 +65,7 @@ for doc in orders_col.find({}):
 
 	# result_doc['sentence'] = doc
 	new_doc['vector_embedding'] = basket_vector
+	print(new_doc)
 
 	# w = orders_demo_col.insert_one(new_doc)
 	# print(w.inserted_id)
