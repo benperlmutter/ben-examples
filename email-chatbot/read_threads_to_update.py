@@ -101,7 +101,7 @@ def main():
                 # date_var = date_var+datetime.timedelta(milliseconds=10)
                 doc = {"date": date_var, "thread_id": thread_id, "snippet": snippet, "sender": sender, "thread_message": thread_message}
                 print(doc)
-                # w = og_emails_col.insert_one(doc)
+                w = og_emails_col.insert_one(doc)
               if "parts" in m["payload"]: #first level payload w/ parts
                 for p in m["payload"]["parts"]:
                   if "body" in p and "data" in p["body"]:
@@ -120,7 +120,7 @@ def main():
                       # date_var = date_var+datetime.timedelta(milliseconds=100)
                       doc = {"date": date_var, "thread_id": thread_id, "snippet": snippet, "sender": sender, "thread_message": thread_message}
                       print(doc)
-                      # w = og_emails_col.insert_one(doc)
+                      w = og_emails_col.insert_one(doc)
                   if "parts" in p: #second level parts in parts array
                     # print("parts in p")
                     for sub_part in p["parts"]:
@@ -141,10 +141,10 @@ def main():
                           # date_var = date_var+datetime.timedelta(milliseconds=1000)
                           doc = {"date": date_var, "thread_id": thread_id, "snippet": snippet, "sender": sender, "thread_message": thread_message}
                           print(doc)
+                          w = og_emails_col.insert_one(doc)
             else:
               print("we didn't get one here")
-            
-      #                   # w = og_emails_col.insert_one(doc)
+
 
         # for m in email["messages"]:
         #   if "parts" in m["payload"]:
