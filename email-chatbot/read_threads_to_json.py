@@ -76,6 +76,7 @@ def main():
             # print("snippet is "+snippet)
             sender = "Guest"
             date_var = datetime.date.today()
+            snippet = m["snippet"]
             if "headers" in m["payload"]:
               for h in m["payload"]["headers"]:
                 if h["name"] == "Date":
@@ -89,7 +90,7 @@ def main():
               # print(thread_message)
               thread_message = thread_message.replace("\r\n"," ")
               # date_var = date_var+datetime.timedelta(milliseconds=10)
-              doc = {"date": date_var, "thread_id": thread_id, "sender": sender, "thread_message": thread_message}
+              doc = {"date": date_var, "thread_id": thread_id, "snippet": snippet, "sender": sender, "thread_message": thread_message}
               print(doc)
               w = og_emails_col.insert_one(doc)
             if "parts" in m["payload"]: #first level payload w/ parts
@@ -108,7 +109,7 @@ def main():
                     # print(thread_message)
                     thread_message = thread_message.replace("\r\n"," ")
                     # date_var = date_var+datetime.timedelta(milliseconds=100)
-                    doc = {"date": date_var, "thread_id": thread_id, "sender": sender, "thread_message": thread_message}
+                    doc = {"date": date_var, "thread_id": thread_id, "snippet": snippet, "sender": sender, "thread_message": thread_message}
                     print(doc)
                     w = og_emails_col.insert_one(doc)
                 if "parts" in p: #second level parts in parts array
@@ -129,7 +130,7 @@ def main():
                         # print(thread_message)
                         thread_message = thread_message.replace("\r\n"," ")
                         # date_var = date_var+datetime.timedelta(milliseconds=1000)
-                        doc = {"date": date_var, "thread_id": thread_id, "sender": sender, "thread_message": thread_message}
+                        doc = {"date": date_var, "thread_id": thread_id, "snippet": snippet, "sender": sender, "thread_message": thread_message}
                         print(doc)
                         w = og_emails_col.insert_one(doc)
 
