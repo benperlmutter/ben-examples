@@ -56,9 +56,23 @@ def main():
 
     i = 0
 
-    w = og_emails_col.find().sort({"date":-1}).limit(10)
-    for doc in w:
-      print(doc)
+    
+
+    if not threads:
+      print("No labels found.")
+      return
+    # print("Threads:")
+    for thread in threads:
+      print("")
+      thread_id = thread["id"]
+      print("new thread with id: "+thread_id)
+      if i < 10:
+        i += 1
+        w = og_emails_col.find({"thread_id":thread_id}).sort({"date":-1}).limit(1)
+        for doc in w:
+          print(doc["date"])
+          print(doc["sender"])
+          print(doc["thread_message"])
 
   except HttpError as error:
     # TODO(developer) - Handle errors from gmail API.
