@@ -11,6 +11,8 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+from bs4 import BeautifulSoup
+
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 
@@ -85,6 +87,7 @@ def main():
               print("WE GOT ONE HERE")
               print("snippet is "+snippet)
               sender = "Guest"
+              print(m)
               date_var = datetime.date.today()
               if "headers" in m["payload"]:
                 for h in m["payload"]["headers"]:
@@ -102,11 +105,20 @@ def main():
                 doc = {"date": date_var, "thread_id": thread_id, "snippet": snippet, "sender": sender, "thread_message": thread_message}
                 print(doc)
                 w = og_emails_col.insert_one(doc)
+              print("WE MADE IT THIS FAR - LINE 106")
               if "parts" in m["payload"]: #first level payload w/ parts
                 for p in m["payload"]["parts"]:
                   if "body" in p and "data" in p["body"]:
                     thread_message = base64.urlsafe_b64decode(p["body"]["data"]).decode("utf-8")
+                    print("WE MADE IT THIS FAR - LINE 113")
+                    print(thread_message)
+                    if thread_message[0] == "<":
+                      non_html_thread_message = BeautifulSoup(thread_message, "html.parser")
+                      thread_message = non_html_thread_message.body.text
+                    print(thread_message)
+                    print("WE MADE IT THIS FAR - LINE 118")
                     if thread_message[0] != "<":
+                      print("WE MADE IT THIS FAR - LINE 120")
                       print(sender+" said..............................NEW PART..............................")
                       thread_message = thread_message.split("On Sun,")[0]
                       thread_message = thread_message.split("On Mon,")[0]
@@ -119,7 +131,7 @@ def main():
                       thread_message = thread_message.replace("\r\n"," ")
                       # date_var = date_var+datetime.timedelta(milliseconds=100)
                       doc = {"date": date_var, "thread_id": thread_id, "snippet": snippet, "sender": sender, "thread_message": thread_message}
-                      print(doc)
+                      # print(doc)
                       w = og_emails_col.insert_one(doc)
                   if "parts" in p: #second level parts in parts array
                     # print("parts in p")
