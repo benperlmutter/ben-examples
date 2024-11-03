@@ -4,6 +4,7 @@ import datetime
 import dateutil
 import pymongo
 import json
+from sentence_transformers import SentenceTransformer, util
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -25,6 +26,8 @@ def main():
   mdb_client = pymongo.MongoClient(mdb_string)
   event_emails_db = mdb_client.event_emails
   og_emails_col = event_emails_db.og_emails
+  embedded_guest_emails_col = event_emails_db.embedded_guest_emails
+
 
   """Shows basic usage of the Gmail API.
   Lists the user's Gmail labels.
@@ -56,7 +59,7 @@ def main():
 
     i = 0
 
-    
+    model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
     if not threads:
       print("No labels found.")
@@ -70,9 +73,44 @@ def main():
         i += 1
         w = og_emails_col.find({"thread_id":thread_id}).sort({"date":-1}).limit(1)
         for doc in w:
-          print(doc["date"])
-          print(doc["sender"])
-          print(doc["thread_message"])
+          thread_message = doc["thread_message"]
+          print("this thread message is as follows")
+          print(thread_message)
+
+          message_vector = model.encode(thread_message).tolist()
+
+          pipeline = [
+              {
+                  "$search": {
+                      "knnBeta": {
+                          "vector": message_vector,
+                          "path": "message_embeddings",
+                          "k": 3
+                      }
+                  }
+              },
+              {
+                "$limit": 3
+              },
+              {
+                  "$project": {
+                      "vector_embedding": 0,
+                      "_id": 0,
+                      'score': {
+                          '$meta': 'searchScore'
+                      }
+                  }
+              }
+          ]
+
+          results = embedded_guest_emails_col.aggregate(pipeline)
+          for result in results:
+            print(result["thread_message"])
+
+
+          # print(doc["date"])
+          # print(doc["sender"])
+          # print(doc["thread_message"])
 
   except HttpError as error:
     # TODO(developer) - Handle errors from gmail API.
