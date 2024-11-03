@@ -28,93 +28,69 @@ def main():
   og_emails_col = event_emails_db.og_emails
   embedded_guest_emails_col = event_emails_db.embedded_guest_emails
 
+  model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
-  """Shows basic usage of the Gmail API.
-  Lists the user's Gmail labels.
-  """
-  creds = None
-  # The file token.json stores the user's access and refresh tokens, and is
-  # created automatically when the authorization flow completes for the first
-  # time.
-  if os.path.exists("../../email-chatbot-creds/token.json"):
-    creds = Credentials.from_authorized_user_file("../../email-chatbot-creds/token.json", SCOPES)
-  # If there are no (valid) credentials available, let the user log in.
-  if not creds or not creds.valid:
-    if creds and creds.expired and creds.refresh_token:
-      creds.refresh(Request())
-    else:
-      flow = InstalledAppFlow.from_client_secrets_file(
-          "../../email-chatbot-creds/credentials.json", SCOPES
-      )
-      creds = flow.run_local_server(port=0)
-    # Save the credentials for the next run
-    with open("../../email-chatbot-creds/token.json", "w") as token:
-      token.write(creds.to_json())
+  w = og_emails_col.find({"sender":"Guest"}).sort({"date":-1}).limit(10)
 
-  try:
-    # Call the Gmail API
-    service = build("gmail", "v1", credentials=creds)
-    results = service.users().threads().list(userId="me").execute()
-    threads = results.get("threads", [])
+  for doc in w:
+    thread_message = doc["thread_message"]
 
-    i = 0
+    conversation_text = "We have received an email from a prospective guest that is interested in a wedding or event at our business, the Big Sur River Inn. They have sent us this email message: \n"+thread_message
+    conversation_text += "\n\nPlease help us generate a response to this inquiry using the same language and communication style as these prior conversations between a guest and the Events Team as follows: \n"
 
-    model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+    message_vector = model.encode(thread_message).tolist()
 
-    if not threads:
-      print("No labels found.")
-      return
-    # print("Threads:")
-    for thread in threads:
-      print("")
-      thread_id = thread["id"]
-      print("new thread with id: "+thread_id)
-      if i < 10:
-        i += 1
-        w = og_emails_col.find({"thread_id":thread_id}).sort({"date":-1}).limit(1)
-        for doc in w:
-          thread_message = doc["thread_message"]
-          print("this thread message is as follows")
-          print(thread_message)
+    pipeline = [
+        {
+            "$search": {
+                "knnBeta": {
+                    "vector": message_vector,
+                    "path": "message_embeddings",
+                    "k": 3
+                }
+            }
+        },
+        {
+          "$limit": 3
+        },
+        {
+            "$project": {
+                "vector_embedding": 0,
+                "_id": 0,
+                'score': {
+                    '$meta': 'searchScore'
+                }
+            }
+        }
+    ]
 
-          message_vector = model.encode(thread_message).tolist()
+    
+    results = embedded_guest_emails_col.aggregate(pipeline)
+    convo_num = 1
+    for result in results:
+      conversation_text += "Conversation "+str(convo_num)+" made up of \n"
+      convo_num += 1
+      thread_id = result["thread_id"]
+      # print(result)
+      relevant_threads = og_emails_col.find({"thread_id":thread_id}).sort({"date":1})
+      # rt_size = len(list(relevant_threads))
+      # rt_size = len(list(relevant_threads.clone()))
+      # print(rt_size)
+      # print("rt size above")
 
-          pipeline = [
-              {
-                  "$search": {
-                      "knnBeta": {
-                          "vector": message_vector,
-                          "path": "message_embeddings",
-                          "k": 3
-                      }
-                  }
-              },
-              {
-                "$limit": 3
-              },
-              {
-                  "$project": {
-                      "vector_embedding": 0,
-                      "_id": 0,
-                      'score': {
-                          '$meta': 'searchScore'
-                      }
-                  }
-              }
-          ]
+      message_num = 1
+      for rt in relevant_threads:
+        # print('this is rt')
+        # print(rt)
+        conversation_text += "Message "+ str(message_num)+ " from the "+rt["sender"]
+        conversation_text += " saying "+rt["thread_message"] + "\n"
+        message_num += 1
+        # if message_num < rt_size:
+        #   conversation_text += 
+      # if message_num < rt_size:
+      #   conversation_text +=
 
-          results = embedded_guest_emails_col.aggregate(pipeline)
-          for result in results:
-            print(result["thread_message"])
-
-
-          # print(doc["date"])
-          # print(doc["sender"])
-          # print(doc["thread_message"])
-
-  except HttpError as error:
-    # TODO(developer) - Handle errors from gmail API.
-    print(f"An error occurred: {error}")
+    print(conversation_text) 
 
 
 if __name__ == "__main__":
