@@ -8,7 +8,7 @@ from openai import AzureOpenAI
 #     azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
 #     )
 
-f = open('../../azure-gpt-creds/azure-gpt-creds.json')
+f = open('../../../azure-gpt-creds/azure-gpt-creds.json')
 pData = json.load(f)
 
 azure_api_key = pData["azure-api-key"]

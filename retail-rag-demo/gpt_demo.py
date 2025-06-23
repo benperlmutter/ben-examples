@@ -22,7 +22,7 @@ query = "stickers, water, burrito"
 
 # ---------- gather credentials here ---------- #
 
-f = open('../../atlas-creds/atlas-creds.json')
+f = open('../../../atlas-creds/atlas-creds.json')
 pData = json.load(f)
 
 mdb_string = pData["mdb-connection-string"]
@@ -32,7 +32,7 @@ retail_demo_db = mdb_client.retail
 # orders_demo_col = retail_demo_db.orders
 orders_demo_col = retail_demo_db.orders_updated_baskets
 
-f = open('../../azure-gpt-creds/azure-gpt-creds.json')
+f = open('../../../azure-gpt-creds/azure-gpt-creds.json')
 pData = json.load(f)
 
 azure_api_key = pData["azure-api-key"]

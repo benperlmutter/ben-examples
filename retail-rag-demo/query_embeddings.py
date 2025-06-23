@@ -20,7 +20,7 @@ query = "stickers, water, burrito"
 
 
 # ---------- script starts here ---------- #
-f = open('../../atlas-creds/atlas-creds.json')
+f = open('../../../atlas-creds/atlas-creds.json')
 pData = json.load(f)
 
 bsri_string = pData["bsri-connection-string"]
