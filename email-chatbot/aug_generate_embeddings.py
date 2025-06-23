@@ -285,12 +285,16 @@ class IncrementalEmailEmbeddingGenerator:
             # Original emails stats
             total_original = self.original_emails_col.count_documents({})
             original_guest = self.original_emails_col.count_documents({"sender": "Guest"})
-            original_events = self.original_emails_col.count_documents({"sender": "Events Team"})
-            
+            original_bsri = self.original_emails_col.count_documents({"sender": "BSRI Team"})
+            # Also check for legacy "Events Team" entries
+            original_events_legacy = self.original_emails_col.count_documents({"sender": "Events Team"})
+
             # Embedded emails stats
             total_embedded = self.email_embeddings_col.count_documents({})
             embedded_guest = self.email_embeddings_col.count_documents({"sender": "Guest"})
-            embedded_events = self.email_embeddings_col.count_documents({"sender": "Events Team"})
+            embedded_bsri = self.email_embeddings_col.count_documents({"sender": "BSRI Team"})
+            # Also check for legacy "Events Team" entries
+            embedded_events_legacy = self.email_embeddings_col.count_documents({"sender": "Events Team"})
             
             # Calculate coverage
             coverage_percentage = (total_embedded / total_original * 100) if total_original > 0 else 0
@@ -299,12 +303,16 @@ class IncrementalEmailEmbeddingGenerator:
             logger.info(f"Original Emails Collection:")
             logger.info(f"  Total: {total_original}")
             logger.info(f"  Guest: {original_guest}")
-            logger.info(f"  Events Team: {original_events}")
+            logger.info(f"  BSRI Team: {original_bsri}")
+            if original_events_legacy > 0:
+                logger.info(f"  Events Team (legacy): {original_events_legacy}")
             logger.info(f"")
             logger.info(f"Email Embeddings Collection:")
             logger.info(f"  Total: {total_embedded}")
             logger.info(f"  Guest: {embedded_guest}")
-            logger.info(f"  Events Team: {embedded_events}")
+            logger.info(f"  BSRI Team: {embedded_bsri}")
+            if embedded_events_legacy > 0:
+                logger.info(f"  Events Team (legacy): {embedded_events_legacy}")
             logger.info(f"")
             logger.info(f"Coverage: {coverage_percentage:.1f}% ({total_embedded}/{total_original})")
             
