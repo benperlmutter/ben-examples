@@ -5,6 +5,7 @@ import dateutil
 import pymongo
 import json
 import logging
+import re
 from typing import Dict, List, Optional
 
 from google.auth.transport.requests import Request
@@ -25,6 +26,20 @@ class EmailCollector:
     def __init__(self):
         self.setup_database()
         self.setup_gmail_service()
+
+    def determine_sender(self, from_header: str) -> str:
+        """Determine sender based on email domain"""
+        if not from_header:
+            return "Guest"
+
+        # Extract email address from header (handles formats like "Name <email@domain.com>")
+        email_match = re.search(r'<([^>]+)>|([^\s<>]+@[^\s<>]+)', from_header)
+        if email_match:
+            email_address = email_match.group(1) or email_match.group(2)
+            if email_address and "@bigsurriverinn.com" in email_address.lower():
+                return "BSRI Team"
+
+        return "Guest"
     
     def setup_database(self):
         """Initialize MongoDB connection with new database structure"""
@@ -137,8 +152,8 @@ class EmailCollector:
             except:
                 date_parsed = datetime.datetime.now()
             
-            # Determine sender
-            sender = "Events Team" if from_header.startswith("Events") else "Guest"
+            # Determine sender based on email domain
+            sender = self.determine_sender(from_header)
             
             # Extract message content
             thread_message = self.extract_message_content(message["payload"])
@@ -281,13 +296,13 @@ class EmailCollector:
         try:
             total_count = self.original_emails_col.count_documents({})
             guest_count = self.original_emails_col.count_documents({"sender": "Guest"})
-            events_count = self.original_emails_col.count_documents({"sender": "Events Team"})
+            bsri_count = self.original_emails_col.count_documents({"sender": "BSRI Team"})
             thread_count = len(self.original_emails_col.distinct("thread_id"))
-            
+
             logger.info("=== Collection Summary ===")
             logger.info(f"Total messages: {total_count}")
             logger.info(f"Guest messages: {guest_count}")
-            logger.info(f"Events Team messages: {events_count}")
+            logger.info(f"BSRI Team messages: {bsri_count}")
             logger.info(f"Unique threads: {thread_count}")
             
             # Get date range
