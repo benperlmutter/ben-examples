@@ -6,6 +6,7 @@ import pymongo
 import json
 import logging
 import time
+import re
 from typing import Dict, List, Optional
 
 from google.auth.transport.requests import Request
@@ -26,6 +27,20 @@ class EmailUpdater:
     def __init__(self):
         self.setup_database()
         self.setup_gmail_service()
+
+    def determine_sender(self, from_header: str) -> str:
+        """Determine sender based on email domain"""
+        if not from_header:
+            return "Guest"
+
+        # Extract email address from header (handles formats like "Name <email@domain.com>")
+        email_match = re.search(r'<([^>]+)>|([^\s<>]+@[^\s<>]+)', from_header)
+        if email_match:
+            email_address = email_match.group(1) or email_match.group(2)
+            if email_address and "@bigsurriverinn.com" in email_address.lower():
+                return "BSRI Team"
+
+        return "Guest"
     
     def setup_database(self):
         """Initialize MongoDB connection"""
@@ -162,8 +177,8 @@ class EmailUpdater:
             except:
                 date_parsed = datetime.datetime.now()
             
-            # Determine sender
-            sender = "Events Team" if from_header.startswith("Events") else "Guest"
+            # Determine sender based on email domain
+            sender = self.determine_sender(from_header)
             
             # Extract message content
             thread_message = self.extract_message_content(message["payload"])
@@ -307,14 +322,14 @@ class EmailUpdater:
                 "sender": "Guest",
                 "date": {"$gte": since_yesterday}
             })
-            
-            events_count = self.original_emails_col.count_documents({
-                "sender": "Events Team",
+
+            bsri_count = self.original_emails_col.count_documents({
+                "sender": "BSRI Team",
                 "date": {"$gte": since_yesterday}
             })
-            
+
             logger.info(f"Recent Guest messages: {guest_count}")
-            logger.info(f"Recent Events Team messages: {events_count}")
+            logger.info(f"Recent BSRI Team messages: {bsri_count}")
             
         except Exception as e:
             logger.error(f"Error generating recent activity summary: {e}")
