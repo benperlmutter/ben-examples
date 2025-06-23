@@ -28,7 +28,7 @@ def query_gpt(message_content, client):
 
 def main():
   #connect to the MDB client
-  f = open('../../atlas-creds/atlas-creds.json')
+  f = open('../../../atlas-creds/atlas-creds.json')
   pData = json.load(f)
 
   mdb_string = pData["mdb-connection-string"]

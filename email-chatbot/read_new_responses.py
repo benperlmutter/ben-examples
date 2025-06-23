@@ -17,7 +17,7 @@ SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 
 def main():
   #connect to the MDB client
-  f = open('../../atlas-creds/atlas-creds.json')
+  f = open('../../../atlas-creds/atlas-creds.json')
   pData = json.load(f)
 
   mdb_string = pData["mdb-connection-string"]
@@ -41,11 +41,11 @@ def main():
       creds.refresh(Request())
     else:
       flow = InstalledAppFlow.from_client_secrets_file(
-          "../../email-chatbot-creds/credentials.json", SCOPES
+          "../../../email-chatbot-creds/credentials.json", SCOPES
       )
       creds = flow.run_local_server(port=0)
     # Save the credentials for the next run
-    with open("../../email-chatbot-creds/token.json", "w") as token:
+    with open("../../../email-chatbot-creds/token.json", "w") as token:
       token.write(creds.to_json())
 
   try:

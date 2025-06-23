@@ -17,7 +17,7 @@ SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 
 def main():
   #connect to the MDB client
-  f = open('../../atlas-creds/atlas-creds.json')
+  f = open('../../../atlas-creds/atlas-creds.json')
   pData = json.load(f)
 
   mdb_string = pData["mdb-connection-string"]
