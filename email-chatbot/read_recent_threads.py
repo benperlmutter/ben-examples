@@ -38,7 +38,7 @@ def main():
   og_emails_col = event_emails_db.og_emails
   embedded_guest_emails_col = event_emails_db.embedded_guest_emails
 
-  f = open('../../azure-gpt-creds/azure-gpt-creds.json')
+  f = open('../../../azure-gpt-creds/azure-gpt-creds.json')
   pData = json.load(f)
 
   azure_api_key = pData["azure-api-key"]
