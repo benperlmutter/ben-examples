@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Email Chatbot{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">
+            <i class="fas fa-tachometer-alt me-2"></i>
+            Email Chatbot Dashboard
+        </h1>
+    </div>
+</div>
+
+{% if stats.error %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-danger" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Error:</strong> {{ stats.error }}
+        </div>
+    </div>
+</div>
+{% else %}
+
+<!-- System Status -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-server me-2"></i>System Status
+                </h5>
+                {% if stats.is_processing %}
+                <span class="badge bg-warning">
+                    <i class="fas fa-spinner fa-spin me-1"></i>Processing
+                </span>
+                {% else %}
+                <span class="badge bg-success">
+                    <i class="fas fa-check-circle me-1"></i>Ready
+                </span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>Last Update:</strong></p>
+                        <p class="text-muted">
+                            {% if stats.last_update %}
+                                {{ stats.last_update }}
+                            {% else %}
+                                Never
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>Embedding Coverage:</strong></p>
+                        <div class="progress mb-2">
+                            <div class="progress-bar" role="progressbar" style="width: {{ stats.coverage.percentage }}%">
+                                {{ stats.coverage.percentage }}%
+                            </div>
+                        </div>
+                        {% if stats.coverage.emails_needing_embeddings > 0 %}
+                        <small class="text-warning">
+                            <i class="fas fa-exclamation-triangle me-1"></i>
+                            {{ stats.coverage.emails_needing_embeddings }} emails need embeddings
+                        </small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <!-- Original Emails -->
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card card-stat h-100 border-primary">
+            <div class="card-body text-center">
+                <div class="text-primary mb-2">
+                    <i class="fas fa-envelope fa-2x"></i>
+                </div>
+                <h3 class="card-title">{{ stats.original_emails.total }}</h3>
+                <p class="card-text text-muted">Total Emails</p>
+                <small class="text-muted">
+                    Guest: {{ stats.original_emails.guest }} | 
+                    BSRI: {{ stats.original_emails.bsri_team }}
+                    {% if stats.original_emails.events_legacy > 0 %}
+                    | Legacy: {{ stats.original_emails.events_legacy }}
+                    {% endif %}
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Embedded Emails -->
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card card-stat h-100 border-success">
+            <div class="card-body text-center">
+                <div class="text-success mb-2">
+                    <i class="fas fa-vector-square fa-2x"></i>
+                </div>
+                <h3 class="card-title">{{ stats.embedded_emails.total }}</h3>
+                <p class="card-text text-muted">With Embeddings</p>
+                <small class="text-muted">
+                    Guest: {{ stats.embedded_emails.guest }} | 
+                    BSRI: {{ stats.embedded_emails.bsri_team }}
+                    {% if stats.embedded_emails.events_legacy > 0 %}
+                    | Legacy: {{ stats.embedded_emails.events_legacy }}
+                    {% endif %}
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Guest Messages -->
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card card-stat h-100 border-warning">
+            <div class="card-body text-center">
+                <div class="text-warning mb-2">
+                    <i class="fas fa-user-friends fa-2x"></i>
+                </div>
+                <h3 class="card-title">{{ stats.recent_activity.guest_messages }}</h3>
+                <p class="card-text text-muted">Recent Guest Messages</p>
+                <small class="text-muted">Last 7 days</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent BSRI Messages -->
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card card-stat h-100 border-info">
+            <div class="card-body text-center">
+                <div class="text-info mb-2">
+                    <i class="fas fa-building fa-2x"></i>
+                </div>
+                <h3 class="card-title">{{ stats.recent_activity.bsri_messages }}</h3>
+                <p class="card-text text-muted">Recent BSRI Messages</p>
+                <small class="text-muted">Last 7 days</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-cogs me-2"></i>System Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-primary btn-lg" onclick="updateSystem()">
+                                <i class="fas fa-sync-alt me-2"></i>
+                                Update Emails & Embeddings
+                            </button>
+                            <small class="text-muted mt-1">
+                                Check for new emails and generate embeddings
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-grid">
+                            <a href="{{ url_for('unanswered_emails') }}" class="btn btn-warning btn-lg">
+                                <i class="fas fa-inbox me-2"></i>
+                                View Unanswered Emails
+                            </a>
+                            <small class="text-muted mt-1">
+                                See guest emails that need responses
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-info btn-lg" onclick="refreshStats()">
+                                <i class="fas fa-chart-bar me-2"></i>
+                                Refresh Statistics
+                            </button>
+                            <small class="text-muted mt-1">
+                                Update dashboard statistics
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Info -->
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>System Information
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li><i class="fas fa-database me-2 text-primary"></i>Database: email_chatbot</li>
+                    <li><i class="fas fa-table me-2 text-success"></i>Collections: original_emails, email_embeddings</li>
+                    <li><i class="fas fa-brain me-2 text-info"></i>Model: sentence-transformers/all-MiniLM-L6-v2</li>
+                    <li><i class="fas fa-robot me-2 text-warning"></i>AI: Azure OpenAI GPT-3.5-turbo</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>Quick Tips
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li><i class="fas fa-arrow-right me-2 text-muted"></i>Run "Update Emails" regularly to stay current</li>
+                    <li><i class="fas fa-arrow-right me-2 text-muted"></i>Check "Unanswered Emails" for guest inquiries</li>
+                    <li><i class="fas fa-arrow-right me-2 text-muted"></i>Generate responses use similar past conversations</li>
+                    <li><i class="fas fa-arrow-right me-2 text-muted"></i>System auto-refreshes stats every 30 seconds</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function updateStatsDisplay(stats) {
+        // Update the statistics display with new data
+        if (stats.error) {
+            showToast('Error loading stats: ' + stats.error, 'error');
+            return;
+        }
+        
+        // Update total emails
+        const totalEmailsElement = document.querySelector('.card-stat:nth-child(1) .card-title');
+        if (totalEmailsElement) {
+            totalEmailsElement.textContent = stats.original_emails.total;
+        }
+        
+        // Update embedded emails
+        const embeddedEmailsElement = document.querySelector('.card-stat:nth-child(2) .card-title');
+        if (embeddedEmailsElement) {
+            embeddedEmailsElement.textContent = stats.embedded_emails.total;
+        }
+        
+        // Update recent guest messages
+        const recentGuestElement = document.querySelector('.card-stat:nth-child(3) .card-title');
+        if (recentGuestElement) {
+            recentGuestElement.textContent = stats.recent_activity.guest_messages;
+        }
+        
+        // Update recent BSRI messages
+        const recentBsriElement = document.querySelector('.card-stat:nth-child(4) .card-title');
+        if (recentBsriElement) {
+            recentBsriElement.textContent = stats.recent_activity.bsri_messages;
+        }
+        
+        // Update progress bar
+        const progressBar = document.querySelector('.progress-bar');
+        if (progressBar) {
+            progressBar.style.width = stats.coverage.percentage + '%';
+            progressBar.textContent = stats.coverage.percentage + '%';
+        }
+    }
+</script>
+{% endblock %}
+

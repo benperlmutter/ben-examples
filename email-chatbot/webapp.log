@@ -1,0 +1,224 @@
+2025-06-23 16:43:37,168 - INFO - ============================================================
+2025-06-23 16:43:37,168 - INFO - STARTING EMAIL CHATBOT WEB APPLICATION
+2025-06-23 16:43:37,168 - INFO - ============================================================
+2025-06-23 16:43:37,169 - INFO - 
+Checking Python Version...
+2025-06-23 16:43:37,169 - INFO - Python version: 3.9.6 (default, Nov 11 2024, 03:15:39) 
+[Clang 16.0.0 (clang-1600.0.26.6)]
+2025-06-23 16:43:37,170 - INFO - ✓ Python Version passed
+2025-06-23 16:43:37,170 - INFO - 
+Checking Dependencies...
+2025-06-23 16:43:37,581 - INFO - ✓ flask is installed
+2025-06-23 16:43:37,811 - INFO - ✓ pymongo is installed
+2025-06-23 16:43:46,037 - INFO - ✓ sentence_transformers is installed
+2025-06-23 16:43:47,030 - INFO - ✓ openai is installed
+2025-06-23 16:43:47,069 - INFO - ✓ google.auth is installed
+2025-06-23 16:43:47,070 - ERROR - ✗ beautifulsoup4 is missing
+2025-06-23 16:43:47,070 - ERROR - Missing packages. Install with: pip install -r requirements.txt
+2025-06-23 16:43:47,071 - ERROR - ✗ Dependencies failed
+2025-06-23 16:43:47,071 - INFO - 
+Checking Credentials...
+2025-06-23 16:43:47,072 - INFO - ✓ ../../../atlas-creds/atlas-creds.json is valid
+2025-06-23 16:43:47,073 - INFO - ✓ ../../../azure-gpt-creds/azure-gpt-creds.json is valid
+2025-06-23 16:44:06,952 - INFO - ✓ ../../../email-chatbot-creds/credentials.json is valid
+2025-06-23 16:44:06,953 - INFO - ✓ Credentials passed
+2025-06-23 16:44:06,953 - INFO - 
+Checking Aug Scripts...
+2025-06-23 16:44:06,953 - INFO - ✓ aug_update_emails.py found
+2025-06-23 16:44:06,953 - INFO - ✓ aug_generate_embeddings.py found
+2025-06-23 16:44:06,954 - INFO - ✓ aug_generate_responses.py found
+2025-06-23 16:44:06,954 - INFO - ✓ Aug Scripts passed
+2025-06-23 16:44:06,954 - INFO - 
+Checking Database Connection...
+2025-06-23 16:44:08,250 - INFO - ✓ original_emails collection found
+2025-06-23 16:44:08,254 - INFO - ✓ email_embeddings collection found
+2025-06-23 16:44:08,254 - INFO - ✓ Database connection successful
+2025-06-23 16:44:08,257 - INFO - ✓ Database Connection passed
+2025-06-23 16:44:08,257 - INFO - 
+Checking Azure OpenAI...
+2025-06-23 16:44:08,260 - ERROR - Azure OpenAI connection failed: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 16:44:08,260 - ERROR - ✗ Azure OpenAI failed
+2025-06-23 16:44:08,261 - INFO - 
+Preflight checks: 4/6 passed
+2025-06-23 16:44:08,261 - WARNING - ⚠️  Some checks failed, but core functionality should work
+2025-06-23 16:44:09,169 - INFO - Starting Flask web application...
+2025-06-23 16:44:09,169 - INFO - Access the application at: http://localhost:5000
+2025-06-23 16:44:09,169 - INFO - Press Ctrl+C to stop the server
+2025-06-23 16:50:53,015 - INFO - ============================================================
+2025-06-23 16:50:53,016 - INFO - STARTING EMAIL CHATBOT WEB APPLICATION
+2025-06-23 16:50:53,016 - INFO - ============================================================
+2025-06-23 16:50:53,016 - INFO - 
+Checking Python Version...
+2025-06-23 16:50:53,016 - INFO - Python version: 3.9.6 (default, Nov 11 2024, 03:15:39) 
+[Clang 16.0.0 (clang-1600.0.26.6)]
+2025-06-23 16:50:53,016 - INFO - ✓ Python Version passed
+2025-06-23 16:50:53,016 - INFO - 
+Checking Dependencies...
+2025-06-23 16:50:53,280 - INFO - ✓ flask is installed
+2025-06-23 16:50:53,422 - INFO - ✓ pymongo is installed
+2025-06-23 16:50:59,554 - INFO - ✓ sentence_transformers is installed
+2025-06-23 16:51:00,124 - INFO - ✓ openai is installed
+2025-06-23 16:51:00,131 - INFO - ✓ google.auth is installed
+2025-06-23 16:51:00,132 - ERROR - ✗ beautifulsoup4 is missing
+2025-06-23 16:51:00,132 - ERROR - Missing packages. Install with: pip install -r requirements.txt
+2025-06-23 16:51:00,132 - ERROR - ✗ Dependencies failed
+2025-06-23 16:51:00,132 - INFO - 
+Checking Credentials...
+2025-06-23 16:51:00,133 - INFO - ✓ ../../../atlas-creds/atlas-creds.json is valid
+2025-06-23 16:51:00,134 - INFO - ✓ ../../../azure-gpt-creds/azure-gpt-creds.json is valid
+2025-06-23 16:51:00,135 - INFO - ✓ ../../../email-chatbot-creds/credentials.json is valid
+2025-06-23 16:51:00,135 - INFO - ✓ Credentials passed
+2025-06-23 16:51:00,135 - INFO - 
+Checking Aug Scripts...
+2025-06-23 16:51:00,135 - INFO - ✓ aug_update_emails.py found
+2025-06-23 16:51:00,135 - INFO - ✓ aug_generate_embeddings.py found
+2025-06-23 16:51:00,136 - INFO - ✓ aug_generate_responses.py found
+2025-06-23 16:51:00,136 - INFO - ✓ Aug Scripts passed
+2025-06-23 16:51:00,136 - INFO - 
+Checking Database Connection...
+2025-06-23 16:51:01,363 - INFO - ✓ original_emails collection found
+2025-06-23 16:51:01,363 - INFO - ✓ email_embeddings collection found
+2025-06-23 16:51:01,363 - INFO - ✓ Database connection successful
+2025-06-23 16:51:01,363 - INFO - ✓ Database Connection passed
+2025-06-23 16:51:01,364 - INFO - 
+Checking Azure OpenAI...
+2025-06-23 16:51:01,365 - ERROR - Azure OpenAI connection failed: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 16:51:01,365 - ERROR - ✗ Azure OpenAI failed
+2025-06-23 16:51:01,365 - INFO - 
+Preflight checks: 4/6 passed
+2025-06-23 16:51:01,366 - WARNING - ⚠️  Some checks failed, but core functionality should work
+2025-06-23 16:51:02,045 - INFO - Starting Flask web application...
+2025-06-23 16:51:02,046 - INFO - Host: 0.0.0.0
+2025-06-23 16:51:02,046 - INFO - Port: 8080
+2025-06-23 16:51:02,046 - INFO - Debug: True
+2025-06-23 16:51:02,046 - INFO - Access the application at: http://localhost:8080
+2025-06-23 16:51:02,047 - INFO - Press Ctrl+C to stop the server
+2025-06-23 16:51:02,081 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.68.101:8080
+2025-06-23 16:51:02,082 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-23 16:51:25,213 - INFO - Initializing EmailUpdater...
+2025-06-23 16:51:25,386 - INFO - Database connection established successfully
+2025-06-23 16:51:25,396 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-06-23 16:51:25,403 - INFO - Gmail service initialized successfully
+2025-06-23 16:51:25,404 - INFO - Initializing EmbeddingGenerator...
+2025-06-23 16:51:27,086 - INFO - Email embeddings collection indexes created successfully
+2025-06-23 16:51:27,087 - INFO - Database connection established successfully
+2025-06-23 16:51:27,088 - INFO - Loading SentenceTransformer model...
+2025-06-23 16:51:27,088 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-06-23 16:51:27,951 - INFO - Use pytorch device: cpu
+2025-06-23 16:51:27,952 - INFO - SentenceTransformer model loaded successfully
+2025-06-23 16:51:27,952 - INFO - Initializing ResponseGenerator...
+2025-06-23 16:51:28,030 - INFO - Database connection established successfully
+2025-06-23 16:51:28,032 - ERROR - Failed to setup Azure OpenAI: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 16:51:28,032 - ERROR - Error initializing components: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 16:51:28,054 - INFO - 127.0.0.1 - - [23/Jun/2025 16:51:28] "GET / HTTP/1.1" 200 -
+2025-06-23 16:51:28,452 - INFO - 127.0.0.1 - - [23/Jun/2025 16:51:28] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-23 16:51:38,307 - INFO - Initializing ResponseGenerator...
+2025-06-23 16:51:38,382 - INFO - Database connection established successfully
+2025-06-23 16:51:38,383 - ERROR - Failed to setup Azure OpenAI: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 16:51:38,383 - ERROR - Error initializing components: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 16:51:38,384 - INFO - 127.0.0.1 - - [23/Jun/2025 16:51:38] "POST /api/update HTTP/1.1" 200 -
+2025-06-23 16:51:43,197 - INFO - Initializing ResponseGenerator...
+2025-06-23 16:51:43,294 - INFO - Database connection established successfully
+2025-06-23 16:51:43,294 - ERROR - Failed to setup Azure OpenAI: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 16:51:43,295 - ERROR - Error initializing components: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 16:51:43,296 - INFO - 127.0.0.1 - - [23/Jun/2025 16:51:43] "GET / HTTP/1.1" 200 -
+2025-06-23 16:51:44,229 - INFO - Initializing ResponseGenerator...
+2025-06-23 16:51:44,315 - INFO - Database connection established successfully
+2025-06-23 16:51:44,316 - ERROR - Failed to setup Azure OpenAI: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 16:51:44,316 - ERROR - Error initializing components: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 16:51:44,335 - INFO - 127.0.0.1 - - [23/Jun/2025 16:51:44] "GET /unanswered HTTP/1.1" 200 -
+2025-06-23 16:51:50,499 - INFO - Initializing ResponseGenerator...
+2025-06-23 16:51:50,561 - INFO - Database connection established successfully
+2025-06-23 16:51:50,562 - ERROR - Failed to setup Azure OpenAI: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 16:51:50,562 - ERROR - Error initializing components: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 16:51:50,563 - INFO - 127.0.0.1 - - [23/Jun/2025 16:51:50] "GET / HTTP/1.1" 200 -
+2025-06-23 16:52:20,605 - INFO - Initializing ResponseGenerator...
+2025-06-23 16:52:20,702 - INFO - Database connection established successfully
+2025-06-23 16:52:20,702 - ERROR - Failed to setup Azure OpenAI: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 16:52:20,702 - ERROR - Error initializing components: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 16:52:20,703 - INFO - 127.0.0.1 - - [23/Jun/2025 16:52:20] "GET /api/stats HTTP/1.1" 200 -
+2025-06-23 16:52:50,594 - INFO - Initializing ResponseGenerator...
+2025-06-23 16:52:50,726 - INFO - Database connection established successfully
+2025-06-23 16:52:50,727 - ERROR - Failed to setup Azure OpenAI: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 16:52:50,727 - ERROR - Error initializing components: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 16:52:50,728 - INFO - 127.0.0.1 - - [23/Jun/2025 16:52:50] "GET /api/stats HTTP/1.1" 200 -
+2025-06-23 17:10:07,564 - INFO - ============================================================
+2025-06-23 17:10:07,566 - INFO - STARTING EMAIL CHATBOT WEB APPLICATION
+2025-06-23 17:10:07,566 - INFO - ============================================================
+2025-06-23 17:10:07,566 - INFO - 
+Checking Python Version...
+2025-06-23 17:10:07,566 - INFO - Python version: 3.9.6 (default, Nov 11 2024, 03:15:39) 
+[Clang 16.0.0 (clang-1600.0.26.6)]
+2025-06-23 17:10:07,566 - INFO - ✓ Python Version passed
+2025-06-23 17:10:07,566 - INFO - 
+Checking Dependencies...
+2025-06-23 17:10:07,768 - INFO - ✓ flask is installed
+2025-06-23 17:10:07,900 - INFO - ✓ pymongo is installed
+2025-06-23 17:10:13,963 - INFO - ✓ sentence_transformers is installed
+2025-06-23 17:10:14,480 - INFO - ✓ openai is installed
+2025-06-23 17:10:14,486 - INFO - ✓ google.auth is installed
+2025-06-23 17:10:14,487 - ERROR - ✗ beautifulsoup4 is missing
+2025-06-23 17:10:14,487 - ERROR - Missing packages. Install with: pip install -r requirements.txt
+2025-06-23 17:10:14,487 - ERROR - ✗ Dependencies failed
+2025-06-23 17:10:14,487 - INFO - 
+Checking Credentials...
+2025-06-23 17:10:14,488 - INFO - ✓ ../../../atlas-creds/atlas-creds.json is valid
+2025-06-23 17:10:14,489 - INFO - ✓ ../../../azure-gpt-creds/azure-gpt-creds.json is valid
+2025-06-23 17:10:14,490 - INFO - ✓ ../../../email-chatbot-creds/credentials.json is valid
+2025-06-23 17:10:14,490 - INFO - ✓ Credentials passed
+2025-06-23 17:10:14,490 - INFO - 
+Checking Aug Scripts...
+2025-06-23 17:10:14,490 - INFO - ✓ aug_update_emails.py found
+2025-06-23 17:10:14,491 - INFO - ✓ aug_generate_embeddings.py found
+2025-06-23 17:10:14,491 - INFO - ✓ aug_generate_responses.py found
+2025-06-23 17:10:14,491 - INFO - ✓ Aug Scripts passed
+2025-06-23 17:10:14,491 - INFO - 
+Checking Database Connection...
+2025-06-23 17:10:15,772 - INFO - ✓ original_emails collection found
+2025-06-23 17:10:15,773 - INFO - ✓ email_embeddings collection found
+2025-06-23 17:10:15,773 - INFO - ✓ Database connection successful
+2025-06-23 17:10:15,773 - INFO - ✓ Database Connection passed
+2025-06-23 17:10:15,774 - INFO - 
+Checking Azure OpenAI...
+2025-06-23 17:10:15,775 - ERROR - Azure OpenAI connection failed: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 17:10:15,775 - ERROR - ✗ Azure OpenAI failed
+2025-06-23 17:10:15,775 - INFO - 
+Preflight checks: 4/6 passed
+2025-06-23 17:10:15,775 - WARNING - ⚠️  Some checks failed, but core functionality should work
+2025-06-23 17:10:16,236 - INFO - Starting Flask web application...
+2025-06-23 17:10:16,237 - INFO - Host: 0.0.0.0
+2025-06-23 17:10:16,237 - INFO - Port: 8080
+2025-06-23 17:10:16,237 - INFO - Debug: True
+2025-06-23 17:10:16,237 - INFO - Access the application at: http://localhost:8080
+2025-06-23 17:10:16,237 - INFO - Press Ctrl+C to stop the server
+2025-06-23 17:10:16,254 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.68.101:8080
+2025-06-23 17:10:16,255 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-23 17:10:18,841 - INFO - Initializing EmailUpdater...
+2025-06-23 17:10:18,984 - INFO - Database connection established successfully
+2025-06-23 17:10:18,989 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-06-23 17:10:18,993 - INFO - Gmail service initialized successfully
+2025-06-23 17:10:18,993 - INFO - Initializing EmbeddingGenerator...
+2025-06-23 17:10:20,590 - INFO - Email embeddings collection indexes created successfully
+2025-06-23 17:10:20,590 - INFO - Database connection established successfully
+2025-06-23 17:10:20,590 - INFO - Loading SentenceTransformer model...
+2025-06-23 17:10:20,590 - INFO - Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+2025-06-23 17:10:21,371 - INFO - Use pytorch device: cpu
+2025-06-23 17:10:21,372 - INFO - SentenceTransformer model loaded successfully
+2025-06-23 17:10:21,372 - INFO - Initializing ResponseGenerator...
+2025-06-23 17:10:21,463 - INFO - Database connection established successfully
+2025-06-23 17:10:21,464 - ERROR - Failed to setup Azure OpenAI: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 17:10:21,464 - ERROR - Error details: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 17:10:21,464 - ERROR - Error initializing components: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 17:10:21,488 - INFO - 127.0.0.1 - - [23/Jun/2025 17:10:21] "GET / HTTP/1.1" 200 -
+2025-06-23 17:10:25,972 - INFO - Initializing ResponseGenerator...
+2025-06-23 17:10:26,049 - INFO - Database connection established successfully
+2025-06-23 17:10:26,050 - ERROR - Failed to setup Azure OpenAI: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 17:10:26,050 - ERROR - Error details: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 17:10:26,050 - ERROR - Error initializing components: __init__() got an unexpected keyword argument 'proxies'
+2025-06-23 17:10:26,051 - INFO - 127.0.0.1 - - [23/Jun/2025 17:10:26] "GET / HTTP/1.1" 200 -

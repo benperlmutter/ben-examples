@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Email Chatbot Dashboard{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .card-stat {
+            transition: transform 0.2s;
+        }
+        .card-stat:hover {
+            transform: translateY(-2px);
+        }
+        .processing-spinner {
+            display: none;
+        }
+        .email-card {
+            transition: all 0.2s;
+            border-left: 4px solid #007bff;
+        }
+        .email-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .response-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .similarity-score {
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+        .btn-loading {
+            position: relative;
+        }
+        .btn-loading:disabled {
+            pointer-events: none;
+        }
+        .btn-loading .spinner-border {
+            width: 1rem;
+            height: 1rem;
+        }
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-envelope-open-text me-2"></i>
+                BSRI Email Chatbot
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('unanswered_emails') }}">
+                            <i class="fas fa-inbox me-1"></i>Unanswered Emails
+                        </a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light btn-sm" onclick="updateSystem()">
+                            <i class="fas fa-sync-alt me-1"></i>Update System
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mt-3">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="container mt-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Global functions
+        function showToast(message, type = 'info') {
+            const toastContainer = document.querySelector('.toast-container');
+            const toastId = 'toast-' + Date.now();
+            
+            const toastHtml = `
+                <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <i class="fas fa-${type === 'success' ? 'check-circle text-success' : type === 'error' ? 'exclamation-circle text-danger' : 'info-circle text-info'} me-2"></i>
+                        <strong class="me-auto">System Notification</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                </div>
+            `;
+            
+            toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+            const toast = new bootstrap.Toast(document.getElementById(toastId));
+            toast.show();
+            
+            // Remove toast element after it's hidden
+            document.getElementById(toastId).addEventListener('hidden.bs.toast', function() {
+                this.remove();
+            });
+        }
+
+        function updateSystem() {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            
+            // Show loading state
+            button.disabled = true;
+            button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Updating...';
+            
+            fetch('/api/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(`Update completed! Found ${data.new_emails} new emails, generated ${data.new_embeddings} embeddings.`, 'success');
+                    // Refresh the page after a short delay
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    showToast(`Update failed: ${data.error || 'Unknown error'}`, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Update failed: Network error', 'error');
+            })
+            .finally(() => {
+                // Restore button state
+                button.disabled = false;
+                button.innerHTML = originalText;
+            });
+        }
+
+        function refreshStats() {
+            fetch('/api/stats')
+            .then(response => response.json())
+            .then(data => {
+                // Update stats on the page if we're on the dashboard
+                if (window.location.pathname === '/') {
+                    updateStatsDisplay(data);
+                }
+            })
+            .catch(error => {
+                console.error('Error refreshing stats:', error);
+            });
+        }
+
+        // Auto-refresh stats every 30 seconds
+        setInterval(refreshStats, 30000);
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

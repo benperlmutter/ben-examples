@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block title %}Unanswered Emails - Email Chatbot{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>
+                <i class="fas fa-inbox me-2"></i>
+                Unanswered Guest Emails
+            </h1>
+            <div>
+                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
+                    <i class="fas fa-filter me-1"></i>Filter
+                </button>
+                <button class="btn btn-primary" onclick="refreshEmails()">
+                    <i class="fas fa-sync-alt me-1"></i>Refresh
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filter Info -->
+<div class="row mb-3">
+    <div class="col-12">
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            Showing emails from the last <strong>{{ days_back }}</strong> days (limit: <strong>{{ limit }}</strong> emails).
+            Found <strong>{{ emails|length }}</strong> unanswered guest emails.
+        </div>
+    </div>
+</div>
+
+<!-- Emails List -->
+<div class="row" id="emailsList">
+    {% if emails %}
+        {% for email in emails %}
+        <div class="col-12 mb-3">
+            <div class="card email-card">
+                <div class="card-header d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="mb-1">{{ email.subject }}</h6>
+                        <small class="text-muted">
+                            <i class="fas fa-user me-1"></i>{{ email.from_header }}
+                            <i class="fas fa-calendar ms-3 me-1"></i>{{ email.date[:19] }}
+                        </small>
+                    </div>
+                    <button class="btn btn-success btn-sm" onclick="generateResponse('{{ email.thread_id }}', '{{ email.message_id }}', this)">
+                        <i class="fas fa-magic me-1"></i>Generate Response
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <p class="mb-2"><strong>Message Preview:</strong></p>
+                            <p class="text-muted">{{ email.thread_message_preview }}</p>
+                            {% if email.thread_message|length > 200 %}
+                            <button class="btn btn-link btn-sm p-0" onclick="toggleFullMessage(this, '{{ email.message_id }}')">
+                                <i class="fas fa-expand-alt me-1"></i>Show Full Message
+                            </button>
+                            <div id="full-message-{{ email.message_id }}" class="d-none mt-2">
+                                <p class="text-muted">{{ email.thread_message }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>Thread ID:</strong></p>
+                            <code class="small">{{ email.thread_id }}</code>
+                            <p class="mb-1 mt-2"><strong>Snippet:</strong></p>
+                            <small class="text-muted">{{ email.snippet }}</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Response Container (initially hidden) -->
+                    <div id="response-{{ email.message_id }}" class="response-container d-none">
+                        <hr>
+                        <div class="response-box">
+                            <h6><i class="fas fa-robot me-2"></i>Generated Response:</h6>
+                            <div class="response-content"></div>
+                            <div class="response-meta mt-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <h4>No Unanswered Emails Found</h4>
+                    <p class="text-muted">All guest emails have been responded to, or there are no recent guest emails.</p>
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Filter Modal -->
+<div class="modal fade" id="filterModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Filter Emails</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="filterForm">
+                    <div class="mb-3">
+                        <label for="daysBack" class="form-label">Days Back</label>
+                        <input type="number" class="form-control" id="daysBack" value="{{ days_back }}" min="1" max="365">
+                        <div class="form-text">How many days back to search for unanswered emails</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="emailLimit" class="form-label">Email Limit</label>
+                        <input type="number" class="form-control" id="emailLimit" value="{{ limit }}" min="1" max="100">
+                        <div class="form-text">Maximum number of emails to display</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="applyFilter()">Apply Filter</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function refreshEmails() {
+        window.location.reload();
+    }
+
+    function applyFilter() {
+        const daysBack = document.getElementById('daysBack').value;
+        const emailLimit = document.getElementById('emailLimit').value;
+        
+        const url = new URL(window.location);
+        url.searchParams.set('days_back', daysBack);
+        url.searchParams.set('limit', emailLimit);
+        
+        window.location.href = url.toString();
+    }
+
+    function toggleFullMessage(button, messageId) {
+        const fullMessageDiv = document.getElementById('full-message-' + messageId);
+        const icon = button.querySelector('i');
+        
+        if (fullMessageDiv.classList.contains('d-none')) {
+            fullMessageDiv.classList.remove('d-none');
+            button.innerHTML = '<i class="fas fa-compress-alt me-1"></i>Show Less';
+        } else {
+            fullMessageDiv.classList.add('d-none');
+            button.innerHTML = '<i class="fas fa-expand-alt me-1"></i>Show Full Message';
+        }
+    }
+
+    function generateResponse(threadId, messageId, button) {
+        const originalText = button.innerHTML;
+        const responseContainer = document.getElementById('response-' + messageId);
+        
+        // Show loading state
+        button.disabled = true;
+        button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generating...';
+        
+        // Hide any existing response
+        responseContainer.classList.add('d-none');
+        
+        fetch('/api/generate_response', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                thread_id: threadId,
+                message_id: messageId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show the response
+                const responseContent = responseContainer.querySelector('.response-content');
+                const responseMeta = responseContainer.querySelector('.response-meta');
+                
+                responseContent.innerHTML = `<pre style="white-space: pre-wrap; font-family: inherit;">${data.response}</pre>`;
+                
+                // Show similarity scores
+                let metaHtml = `<small class="similarity-score">
+                    <i class="fas fa-chart-line me-1"></i>
+                    Based on ${data.similar_conversations_count} similar conversations
+                `;
+                
+                if (data.similarity_scores && data.similarity_scores.length > 0) {
+                    metaHtml += ` (similarity scores: ${data.similarity_scores.map(s => s.toFixed(3)).join(', ')})`;
+                }
+                metaHtml += '</small>';
+                
+                responseMeta.innerHTML = metaHtml;
+                responseContainer.classList.remove('d-none');
+                
+                // Change button to indicate success
+                button.innerHTML = '<i class="fas fa-check me-1"></i>Response Generated';
+                button.classList.remove('btn-success');
+                button.classList.add('btn-outline-success');
+                
+                showToast('Response generated successfully!', 'success');
+            } else {
+                showToast(`Failed to generate response: ${data.error}`, 'error');
+                button.disabled = false;
+                button.innerHTML = originalText;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('Failed to generate response: Network error', 'error');
+            button.disabled = false;
+            button.innerHTML = originalText;
+        });
+    }
+
+    // Auto-refresh every 5 minutes
+    setInterval(() => {
+        if (!document.hidden) {
+            refreshEmails();
+        }
+    }, 300000);
+</script>
+{% endblock %}
